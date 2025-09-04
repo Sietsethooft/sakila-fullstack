@@ -1,19 +1,265 @@
 <section>
-  <h2>Over deze applicatie</h2>
+    <h1>Over Sakila Fullstack Applicatie</h1>
   <p>
-    Welkom bij de Sakila Fullstack webapplicatie.  
-    Deze applicatie is gemaakt als schoolopdracht om te oefenen met:
+    Deze applicatie is een sakila project waarin een filmverhuur systeem wordt gerealiseerd. 
+    Het systeem is ontwikkeld als onderdeel van mijn opleiding en biedt medewerkers de mogelijkheid om klantgegevens te beheren, films toe te voegen of aan te passen, verhuurregistraties bij te houden en rapportages te bekijken. 
+    Het systeem beschikt over een beveiligde login, zodat alleen geautoriseerde medewerkers toegang hebben tot de functionaliteit van de applicatie. 
+    Hiermee is het een compleet voorbeeld van een webapplicatie met server-side rendering, CRUD-functionaliteit en gebruik van een relationele database.
   </p>
 
+  <h2>Gebruikte packages</h2>
   <ul>
-    <li>Express.js voor de server</li>
-    <li>EJS voor server-side rendering</li>
-    <li>MySQL (Sakila database) voor dataopslag</li>
-    <li>MVC + DAO + Service architectuur</li>
+    <li>Node.js & Express</li>
+    <li>EJS templates voor views</li>
+    <li>MySQL (Sakila database)</li>
+    <li>Bootstrap 5 voor styling</li>
+    <li>Bcrypt voor hashing</li>
+    <li>JWT token voor inloggen</li>
   </ul>
 
-  <p>
-    Hier kun je als medewerker klanten beheren, films inzien en verhuur bijhouden.  
-    Deze <strong>about page</strong> is puur informatief en bevat geen database-logica.
-  </p>
+  <h2 class="mt-4">Epics</h2>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Epic</th>
+        <th>Beschrijving</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>E1</td><td>Klantbeheer</td><td>Beheren en bekijken van klantgegevens en huurgeschiedenis.</td></tr>
+      <tr><td>E2</td><td>Film- & voorraadbeheer</td><td>Inzien en controleren van films en voorraad.</td></tr>
+      <tr><td>E3</td><td>Verhuurregistratie</td><td>Registreren van verhuur en retouren, bijhouden openstaande verhuur.</td></tr>
+      <tr><td>E4</td><td>Authenticatie & Autorisatie</td><td>Veilige toegang tot het systeem voor medewerkers.</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="mt-4">User Stories</h2>
+  <table class="table table-bordered table-sm">
+    <colgroup>
+      <col style="width: 6%">
+      <col style="width: 13%">
+      <col style="width: 40%">
+      <col style="width: 36%">
+      <col style="width: 5%">
+    </colgroup>
+    <thead class="table-light">
+      <tr>
+        <th>ID</th>
+        <th>Titel</th>
+        <th>Beschrijving</th>
+        <th>Acceptatiecriteria</th>
+        <th>Prio</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Klantbeheer -->
+      <tr>
+        <td>US01E1</td>
+        <td>Klant zoeken</td>
+        <td>Als medewerker wil ik een klant kunnen zoeken en de huurgeschiedenis bekijken, zodat ik snel hun gegevens en eerdere verhuur zie.</td>
+        <td>
+          - Zoekfunctie vindt juiste klant(en)<br>
+          - Huurgeschiedenis volledig en correct<br>
+          - Scrollen/selecteren werkt makkelijk<br>
+          - Bij geen resultaten: melding “Geen klant gevonden”
+        </td>
+        <td>M</td>
+      </tr>
+      <tr>
+        <td>US02E1</td>
+        <td>Klant toevoegen</td>
+        <td>Als medewerker wil ik een nieuwe klant kunnen toevoegen, zodat nieuwe klanten geholpen kunnen worden.</td>
+        <td>
+          - Formulier met verplichte velden: voornaam, achternaam, e-mail, adres<br>
+          - Opslaan alleen bij correcte invoer<br>
+          - Foutmelding bij incorrecte of lege invoer<br>
+          - Bevestiging na succesvol opslaan<br>
+          - Nieuwe klant direct zichtbaar in lijst
+        </td>
+        <td>M</td>
+      </tr>
+      <tr>
+        <td>US03E1</td>
+        <td>Klantgegevens aanpassen</td>
+        <td>Als medewerker wil ik klantgegevens kunnen aanpassen, zodat contact- en adresinformatie altijd up-to-date is.</td>
+        <td>
+          - Formulier toont bestaande klantgegevens correct<br>
+          - Wijzigingen correct opgeslagen<br>
+          - Alle verplichte velden moeten ingevuld zijn<br>
+          - Bevestiging na opslaan<br>
+          - Foutieve invoer geblokkeerd met duidelijke foutmelding
+        </td>
+        <td>S</td>
+      </tr>
+      <tr>
+        <td>US04E1</td>
+        <td>Klant verwijderen</td>
+        <td>Als medewerker wil ik een klant kunnen verwijderen, zodat inactieve of foutieve klantrecords verwijderd worden.</td>
+        <td>
+          - Selectie van klant mogelijk<br>
+          - Bevestiging vragen (“Weet u zeker dat u deze klant wilt verwijderen?”)<br>
+          - Klant verdwijnt uit lijst na bevestiging<br>
+          - Foutieve acties geblokkeerd met melding<br>
+          - Bevestigingsbericht na verwijderen
+        </td>
+        <td>M</td>
+      </tr>
+
+      <!-- Film & voorraadbeheer -->
+      <tr>
+        <td>US01E2</td>
+        <td>Films bekijken en filteren</td>
+        <td>Als medewerker wil ik alle films in de catalogus kunnen bekijken en filteren op categorie of genre, zodat ik klanten snel een relevante selectie kan adviseren.</td>
+        <td>
+          - Overzicht toont alle films met titel, categorie, rating, lengte<br>
+          - Films sorteren en filteren mogelijk<br>
+          - Meerdere filters combineren<br>
+          - Bij geen resultaten: melding “Geen films gevonden”
+        </td>
+        <td>M</td>
+      </tr>
+      <tr>
+        <td>US02E2</td>
+        <td>Film toevoegen</td>
+        <td>Als medewerker wil ik een nieuwe film kunnen toevoegen, zodat de catalogus actueel blijft.</td>
+        <td>
+          - Formulier bevat verplichte velden: titel, categorie, rating, lengte, huurprijs<br>
+          - Opslaan alleen bij correcte invoer<br>
+          - Foutmelding bij incorrecte of lege invoer<br>
+          - Film verschijnt direct in overzicht<br>
+          - Bevestiging na succesvol opslaan
+        </td>
+        <td>M</td>
+      </tr>
+      <tr>
+        <td>US03E2</td>
+        <td>Beschikbaarheid controleren</td>
+        <td>Als medewerker wil ik de beschikbaarheid van een film kunnen controleren, zodat ik weet of een film verhuurd kan worden.</td>
+        <td>
+          - Aantal beschikbare exemplaren correct weergegeven<br>
+          - Niet beschikbaar films duidelijk aangegeven (“Niet beschikbaar”)
+        </td>
+        <td>M</td>
+      </tr>
+      <tr>
+        <td>US04E2</td>
+        <td>Populaire films bekijken</td>
+        <td>Als medewerker wil ik populaire films kunnen bekijken, zodat ik kan zien welke films vaak verhuurd worden.</td>
+        <td>
+          - Overzicht toont topfilms gesorteerd op verhuurfrequentie
+        </td>
+        <td>C</td>
+      </tr>
+      <tr>
+        <td>US05E2</td>
+        <td>Film gegevens aanpassen</td>
+        <td>Als medewerker wil ik bestaande filmgegevens kunnen aanpassen, zodat informatie up-to-date blijft.</td>
+        <td>
+          - Formulier toont bestaande gegevens correct<br>
+          - Verplichte velden ingevuld<br>
+          - Bevestiging na opslaan<br>
+          - Foutieve invoer geblokkeerd
+        </td>
+        <td>S</td>
+      </tr>
+      <tr>
+        <td>US06E2</td>
+        <td>Film verwijderen</td>
+        <td>Als medewerker wil ik een film uit de catalogus kunnen verwijderen, zodat oude of foutieve films verwijderd worden.</td>
+        <td>
+          - Film selecteerbaar en verwijderbaar<br>
+          - Bevestiging gevraagd<br>
+          - Foutieve acties geblokkeerd<br>
+          - Bevestigingsbericht na succesvol verwijderen
+        </td>
+        <td>M</td>
+      </tr>
+
+      <!-- Verhuurregistratie -->
+      <tr>
+        <td>US01E3</td>
+        <td>Nieuwe verhuur registreren</td>
+        <td>Als medewerker wil ik een nieuwe verhuur kunnen registreren, zodat een klant een film mee kan nemen.</td>
+        <td>
+          - Formulier met klant, film en verhuurdatum<br>
+          - Controle beschikbaarheid film<br>
+          - Voorraad automatisch aangepast<br>
+          - Bevestiging na registratie<br>
+          - Foutieve acties geblokkeerd met foutmelding
+        </td>
+        <td>M</td>
+      </tr>
+      <tr>
+        <td>US02E3</td>
+        <td>Film retourneren</td>
+        <td>Als medewerker wil ik een film als geretourneerd kunnen markeren, zodat de voorraad correct blijft.</td>
+        <td>
+          - Selectie openstaande verhuur mogelijk<br>
+          - Retourdatum correct geregistreerd<br>
+          - Voorraad automatisch verhoogd<br>
+          - Bevestiging na registratie<br>
+          - Ongeldige acties geblokkeerd
+        </td>
+        <td>M</td>
+      </tr>
+      <tr>
+        <td>US03E3</td>
+        <td>Openstaande verhuur bekijken</td>
+        <td>Als medewerker wil ik een overzicht van openstaande verhuur kunnen zien, zodat ik weet welke films nog niet zijn teruggebracht.</td>
+        <td>
+          - Correct overzicht van actieve verhuur<br>
+          - Sorteren en filteren mogelijk<br>
+          - Bij geen openstaande verhuur: melding “Geen actieve verhuur gevonden”
+        </td>
+        <td>M</td>
+      </tr>
+      <tr>
+        <td>US04E3</td>
+        <td>Overdue rentals bekijken</td>
+        <td>Als medewerker wil ik een lijst van overdue rentals kunnen bekijken, zodat ik klanten kan herinneren om films terug te brengen.</td>
+        <td>
+          - Correct overzicht van te late verhuur<br>
+          - Bij geen overdue rentals: melding “Geen te late verhuur”
+        </td>
+        <td>S</td>
+      </tr>
+
+      <!-- Authenticatie -->
+      <tr>
+        <td>US01E4</td>
+        <td>Inloggen</td>
+        <td>Als medewerker wil ik kunnen inloggen met mijn gebruikersnaam en wachtwoord, zodat ik toegang krijg tot het systeem.</td>
+        <td>
+          - Verplichte velden: gebruikersnaam en wachtwoord<br>
+          - Correcte login → doorgestuurd naar dashboard<br>
+          - Foutieve login → foutmelding en blijft op loginpagina<br>
+          - Beveiligde pagina’s blokkeren toegang voor niet-ingelogden<br>
+          - Unieke sessie gestart na succeslogin
+        </td>
+        <td>M</td>
+      </tr>
+      <tr>
+        <td>US02E4</td>
+        <td>Uitloggen</td>
+        <td>Als medewerker wil ik kunnen uitloggen, zodat mijn account beschermd blijft.</td>
+        <td>
+          - Sessie volledig beëindigd<br>
+          - Teruggestuurd naar loginpagina<br>
+          - Geen toegang tot dashboard na uitloggen, ook niet via browser terugknop
+        </td>
+        <td>M</td>
+      </tr>
+      <tr>
+        <td>US03E4</td>
+        <td>Sessie verlopen</td>
+        <td>Als medewerker wil ik dat mijn sessie automatisch verloopt na inactiviteit, zodat het systeem veilig blijft.</td>
+        <td>
+          - Sessie verloopt automatisch na ingestelde periode<br>
+          - Gebruiker wordt doorgestuurd naar loginpagina
+        </td>
+        <td>S</td>
+      </tr>
+    </tbody>
+  </table>
 </section>
