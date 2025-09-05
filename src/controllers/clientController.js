@@ -12,6 +12,7 @@ const clientController = {
                                           `${(date.getMonth()+1).toString().padStart(2, '0')}/` +
                                           `${date.getFullYear()}`;
                     return {
+                        customer_id: client.customer_id,
                         naam: `${client.first_name} ${client.last_name}`,
                         email: client.email,
                         active: client.active ? 'Ja' : 'Nee',

@@ -4,6 +4,7 @@ clientService = {
     getClients(callback) {
         const query = `
             SELECT 
+                customer_id,
                 first_name,
                 last_name,
                 email,

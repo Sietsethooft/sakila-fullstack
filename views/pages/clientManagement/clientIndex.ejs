@@ -31,7 +31,7 @@
       <tbody>
         <% if (clients && clients.length > 0) { %>
           <% clients.forEach(function(client) { %>
-            <tr>
+            <tr class="client-row" data-id="<%= client.customer_id %>">
               <td><%= client.naam %></td>
               <td><%= client.email %></td>
               <td><%= client.active %></td>
@@ -47,3 +47,12 @@
     </table>
   </div>
 </section>
+
+<script>
+  document.querySelectorAll('.client-row').forEach(row => {
+    row.addEventListener('click', function() {
+      const id = this.getAttribute('data-id');
+      window.location.href = `/clientManagement/${id}`;
+    });
+  });
+</script>
