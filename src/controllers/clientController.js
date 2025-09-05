@@ -22,6 +22,11 @@ const clientController = {
                 res.render('pages/clientManagement/clientindex', { clients: formattedClients });
             }
         });
+    },
+    getClientById(req, res) {
+        const clientId = req.params.id;
+        // For now, just render a placeholder page
+        res.render('pages/clientManagement/clientDetail', { clientId });
     }
 };
 
