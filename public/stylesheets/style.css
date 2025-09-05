@@ -176,6 +176,10 @@ main {
 }
 
 /* Searchbar & button styling */
+.input-group {
+  min-width: 450px;
+}
+
 .searchbar {
   max-width: 350px;
   min-width: 220px;
@@ -196,7 +200,16 @@ main {
 .searchbar:focus {
   outline: none;
   border-color: #3949ab;
-  box-shadow: 0 0 0 3px rgba(57,73,171,0.2);
+  box-shadow: 0 0 0 1px rgba(57,73,171,0.2);
+}
+
+.btn-search {
+  background-color: #3949ab;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(57,73,171,0.08);
 }
 
 .btn-primary {
@@ -209,8 +222,10 @@ main {
   box-shadow: 0 2px 8px rgba(57,73,171,0.08);
 }
 
-.btn-primary:hover {
+.btn-primary:hover,
+.btn-search:hover {
   background-color: #283593;
+  color: #fff; 
 }
 
 /*Extra CSS*/

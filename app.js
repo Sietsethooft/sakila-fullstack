@@ -7,7 +7,7 @@ const expressLayouts = require('express-ejs-layouts');
 
 const dashboardRouter = require('./src/routes/dashboardRoutes');
 const aboutRouter = require('./src/routes/aboutRoutes');
-const clientManagementRouter = require('./src/routes/clientmanagementRoutes');
+const clientRouter = require('./src/routes/clientRoutes');
 
 const app = express();
 
@@ -29,7 +29,7 @@ app.set('layout', 'layouts/main');
 app.use('/', dashboardRouter);
 app.use('/dashboard', dashboardRouter);
 app.use('/about', aboutRouter);
-app.use('/clientmanagement', clientManagementRouter);
+app.use('/clientManagement', clientRouter);
 
 // Catch 404 and forward to error handler
 app.use(function(req, res, next) {
