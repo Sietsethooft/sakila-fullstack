@@ -2,7 +2,8 @@ const clientServices = require('../services/clientServices');
 
 const clientController = {
     getAllClients(req, res){
-        clientServices.getClients((error, clients) => {
+        const search = req.query.search || '';
+        clientServices.getClients(search, (error, clients) => {
             if (error) {
                 res.status(500).send('Error retrieving clients');
             } else {
@@ -19,7 +20,7 @@ const clientController = {
                         last_update: formattedDate
                     };
                 });
-                res.render('pages/clientManagement/clientindex', { clients: formattedClients });
+                res.render('pages/clientManagement/clientIndex', { clients: formattedClients });
             }
         });
     },

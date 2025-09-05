@@ -1,23 +1,21 @@
 const db = require('../models/db');
 
-clientService = {
-    getClients(callback) {
-        const query = `
-            SELECT 
-                customer_id,
-                first_name,
-                last_name,
-                email,
-                active,
-                last_update
+const clientService = {
+    getClients(search, callback) {
+        let query = `
+            SELECT customer_id, first_name, last_name, email, active, last_update
             FROM customer
         `;
-        db.query(query, (error, results) => {
-            if (error) return callback(error);
+        let params = [];
+        if (search) {
+            query += ' WHERE CONCAT(first_name, " ", last_name) LIKE ?';
+            params.push(`%${search}%`);
+        }
+        db.query(query, params, (err, results) => {
+            if (err) return callback(err);
             callback(null, results);
         });
     }
-
 };
 
 module.exports = clientService;
