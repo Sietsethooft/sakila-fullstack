@@ -91,15 +91,13 @@ a {
   min-width: 320px;
   box-sizing: border-box;
 }
+
 .header-content {
   display: flex;
   align-items: center;
   gap: 16px;
 }
-.notification {
-  position: relative;
-  margin-right: 8px;
-}
+
 .user {
   padding-top: 10px;
   font-size: 1.2rem;
@@ -140,6 +138,82 @@ main {
 .header-color {
   background-color: #1f2a30;
 }
+
+/* ClientManagement css */
+.client-card {
+  background: #f8f9fa;
+  color: #222;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+  max-width: 1100px;
+  margin: 0px auto 0px auto;
+  padding: 32px 32px 24px 32px;
+}
+
+/* Tabel styling */
+.client-table {
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.client-table th {
+  background: #e3e7ee;
+  color: #222;
+  border-color: #d1d5db !important;
+}
+
+.client-table td {
+  background: #f6f8fa;
+  color: #222;
+  border-color: #e3e7ee !important;
+}
+
+.client-table tr:hover td {
+  background: #e8f0fe !important;
+  color: #222 !important;
+  cursor: pointer;
+}
+
+/* Searchbar & button styling */
+.searchbar {
+  max-width: 350px;
+  min-width: 220px;
+  background: #fff !important;
+  color: #222 !important;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 1rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.searchbar::placeholder {
+  color: #888;
+  opacity: 1;
+}
+
+.searchbar:focus {
+  outline: none;
+  border-color: #3949ab;
+  box-shadow: 0 0 0 3px rgba(57,73,171,0.2);
+}
+
+.btn-primary {
+  background-color: #3949ab;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  padding: 10px 22px;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(57,73,171,0.08);
+}
+
+.btn-primary:hover {
+  background-color: #283593;
+}
+
+/*Extra CSS*/
 
 .p-40 {
   padding: 0px 40px 20px 40px;
