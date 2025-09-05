@@ -14,7 +14,7 @@
         </button>
       </div>
     </form>
-        <button class="btn btn-primary" type="button">
+        <button class="btn btn-primary" type="button" id="add-client-btn">
       <i class="fas fa-user-plus me-2"></i> Klant toevoegen
     </button>
   </div>
@@ -54,5 +54,9 @@
       const id = this.getAttribute('data-id');
       window.location.href = `/clientManagement/${id}`;
     });
+  });
+
+  document.getElementById('add-client-btn').addEventListener('click', function() {
+    window.location.href = '/clientManagement/create';
   });
 </script>

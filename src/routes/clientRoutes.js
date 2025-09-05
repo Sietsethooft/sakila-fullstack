@@ -5,5 +5,8 @@ const clientController = require('../controllers/clientController');
 
 router.get('/', clientController.getAllClients);
 router.get('/:id', clientController.getClientById);
+router.get('/create', (req, res) => {
+    res.render('pages/clientManagement/clientCreate');
+});
 
 module.exports = router;
