@@ -47,6 +47,74 @@ const clientService = {
                 });
             });
         });
+    },
+    createClient(clientData, callback) {
+        const { first_name, last_name, email, address, district, city, country, postal_code, phone } = clientData;
+        const storeId = 1; // Temp hardcoded store_id
+
+        // START TRANSACTION
+        db.query('START TRANSACTION', (err) => {
+            if (err) return callback(err);
+
+            // 1. Country
+            const countrySql = `
+                INSERT INTO country (country, last_update)
+                VALUES (?, NOW())
+                ON DUPLICATE KEY UPDATE country_id = LAST_INSERT_ID(country_id)
+            `;
+            db.query(countrySql, [country], (err, result) => {
+                if (err) return rollback(err);
+
+                const countryId = result.insertId;
+
+                // 2. City
+                const citySql = `
+                    INSERT INTO city (city, country_id, last_update)
+                    VALUES (?, ?, NOW())
+                    ON DUPLICATE KEY UPDATE city_id = LAST_INSERT_ID(city_id)
+                `;
+                db.query(citySql, [city, countryId], (err, result) => {
+                    if (err) return rollback(err);
+
+                    const cityId = result.insertId;
+
+                    // 3. Address
+                    const addressSql = `
+                        INSERT INTO address (address, address2, district, city_id, postal_code, phone, last_update, location)
+                        VALUES (?, '', ?, ?, ?, ?, NOW(), ST_GeomFromText('POINT(0 0)', 0))
+                    `;
+                    db.query(addressSql, [address, district, cityId, postal_code, phone], (err, result) => {
+                        if (err) return rollback(err);
+
+                        const addressId = result.insertId;
+
+                        // 4. Customer
+                        const customerSql = `
+                            INSERT INTO customer (store_id, first_name, last_name, email, address_id, active, create_date, last_update)
+                            VALUES (?, ?, ?, ?, ?, 1, NOW(), NOW())
+                        `;
+                        db.query(customerSql, [storeId, first_name, last_name, email, addressId], (err, result) => {
+                            if (err) return rollback(err);
+
+                            const customerId = result.insertId;
+
+                            // COMMIT
+                            db.query('COMMIT', (err) => {
+                                if (err) return rollback(err);
+
+                                callback(null, { customerId, first_name, last_name, email });
+                            });
+                        });
+                    });
+                });
+            });
+        });
+
+        function rollback(err) {
+            db.query('ROLLBACK', () => {
+                callback(err);
+            });
+        }
     }
 };
 

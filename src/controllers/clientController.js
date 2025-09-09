@@ -103,6 +103,46 @@ const clientController = {
                 });
             }
         });
+    },
+    createClient(req, res) {
+        const {
+            first_name,
+            last_name,
+            email,
+            address,
+            city,
+            district,
+            country,
+            postal_code,
+            phone
+        } = req.body;
+
+        // Validation of required fields
+        if (!first_name || !last_name || !email || !address || !city || !district || !country || !phone) {
+            return res.status(400).render('pages/clientManagement/clientCreate', {
+                error: 'Vul alle verplichte velden in.'
+            });
+        }
+
+        clientServices.createClient({
+            first_name,
+            last_name,
+            email,
+            address,
+            city,
+            district,
+            country,
+            postal_code,
+            phone
+        }, (err, result) => {
+            if (err) {
+                return res.status(500).render('pages/error', {
+                    message: 'Fout bij het aanmaken van klant',
+                    error: { status: 500, stack: err.stack }
+                });
+            }
+            res.redirect('/clientManagement');
+        });
     }
 };
 
