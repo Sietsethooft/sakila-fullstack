@@ -25,9 +25,15 @@ const clientController = {
     const clientId = req.params.id;
     clientServices.getClientDetails(clientId, (error, client) => {
         if (error) {
-            res.status(500).send('Error retrieving client details');
+            res.status(500).render('pages/error', {
+                message: 'Fout bij het ophalen van klantgegevens',
+                error: { status: 500, stack: error.stack }
+            });
         } else if (!client) {
-            res.status(404).send('Client not found');
+            res.status(404).render('pages/error', {
+                message: 'Klant niet gevonden',
+                error: { status: 404, stack: '' }
+            });
         } else {
             const formattedClient = {
                 klantnaam: `${client.first_name} ${client.last_name}`,
