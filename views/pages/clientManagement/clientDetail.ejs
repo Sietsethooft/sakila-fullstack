@@ -1,1 +1,94 @@
-<h1>Hier komt info nog (hopelijk)</h1>
+<section class="client-card">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2><%= data.client.klantnaam %></h2>
+        <div>
+            <a href="/clientManagement/<%= data.client.id %>/edit" class="btn btn-warning me-2">
+                <i class="fas fa-edit"></i> Bewerken
+            </a>
+            <form action="/clientManagement" class="display-inline" method="POST">
+                <button type="submit" class="btn btn-danger" onclick="return confirm('Weet je zeker dat je deze klant wilt verwijderen?');">
+                    <i class="fas fa-trash-alt"></i> Verwijderen
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <table class="table-800 table table-bordered">
+        <colgroup>
+            <col style="width:25%">
+            <col style="width:75%">
+        </colgroup>
+        <tr>
+            <th>Email</th>
+            <td><%= data.client.email %></td>
+        </tr>
+        <tr>
+            <th>Actief</th>
+            <td><%= data.client.actief %></td>
+        </tr>
+        <tr>
+            <th>Adres</th>
+            <td><%= data.client.adres %></td>
+        </tr>
+        <tr>
+            <th>Aangemaakt op</th>
+            <td><%= data.client.aangemaakt_op %></td>
+        </tr>
+        <tr>
+            <th>Laatste update</th>
+            <td><%= data.client.laatste_update %></td>
+        </tr>
+    </table>
+
+    <h3>Openstaande Verhuren</h3>
+    <table class="table-800 table table-bordered">
+    <thead>
+        <tr>
+        <th>Film</th>
+        <th>Verhuurd op</th>
+        <th>Te retourneren voor</th>
+        <th>Prijs</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+        <td>Avatar</td>
+        <td>07/09/2025</td>
+        <td>10/09/2025</td>
+        <td>€6,99</td>
+        </tr>
+    </tbody>
+    </table>
+
+    <h3>Verhuurgeschiedenis</h3>
+    <table class="table-800 table table-bordered">
+    <thead>
+        <tr>
+        <th>Film</th>
+        <th>Verhuurd op</th>
+        <th>Teruggebracht op</th>
+        <th>Prijs</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+        <td>The Matrix</td>
+        <td>02/08/2025</td>
+        <td>05/08/2025</td>
+        <td>€4,99</td>
+        </tr>
+        <tr>
+        <td>Finding Nemo</td>
+        <td>15/07/2025</td>
+        <td>18/07/2025</td>
+        <td>€3,99</td>
+        </tr>
+        <tr>
+        <td>Inception</td>
+        <td>01/06/2025</td>
+        <td>03/06/2025</td>
+        <td>€5,99</td>
+        </tr>
+        </tbody>
+    </table>
+</section>

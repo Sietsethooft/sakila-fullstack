@@ -15,6 +15,20 @@ const clientService = {
             if (err) return callback(err);
             callback(null, results);
         });
+    },
+    getClientDetails(clientId, callback) {
+        let query = `
+        SELECT first_name, last_name, email, active, customer.create_date, customer.last_update, address.address, address.district, city.city, country.country 
+        FROM customer
+        join address on customer.address_id = address.address_id
+        join city on address.city_id = city.city_id
+        join country on city.country_id = country.country_id 
+        WHERE customer_id = ?;
+        `;
+        db.query(query, [clientId], (err, results) => {
+            if (err) return callback(err);
+            callback(null, results[0]);
+        });
     }
 };
 
