@@ -1,4 +1,5 @@
 const clientServices = require('../services/clientServices');
+const rentalServices = require('../services/rentalServices');
 
 const clientController = {
     getAllClients(req, res){
@@ -20,27 +21,56 @@ const clientController = {
             }
         });
     },
-    getClientById(req, res) {
-        const clientId = req.params.id;
-        clientServices.getClientDetails(clientId, (error, client) => {
-            if (error) {
-                res.status(500).send('Error retrieving client details');
-            } else if (!client) {
-                res.status(404).send('Client not found');
-            } else {
-                const formattedClient = {
-                    klantnaam: `${client.first_name} ${client.last_name}`,
-                    email: client.email,
-                    actief: client.active ? 'Ja' : 'Nee',
-                    adres: `${client.address}, ${client.city}, ${client.district}, ${client.country}`,
-                    aangemaakt_op: formatDate(client.create_date),
-                    laatste_update: formatDate(client.last_update),
-                    id: clientId
-                };
-                console.log(Object.keys(formattedClient));
-                res.render('pages/clientManagement/clientDetail', { data: { client: formattedClient } });
-            }
-        });
+    getClientDetails(req, res) {
+    const clientId = req.params.id;
+    clientServices.getClientDetails(clientId, (error, client) => {
+        if (error) {
+            res.status(500).send('Error retrieving client details');
+        } else if (!client) {
+            res.status(404).send('Client not found');
+        } else {
+            const formattedClient = {
+                klantnaam: `${client.first_name} ${client.last_name}`,
+                email: client.email,
+                actief: client.active ? 'Ja' : 'Nee',
+                adres: `${client.address}, ${client.city}, ${client.district}, ${client.country}`,
+                aangemaakt_op: formatDate(client.create_date),
+                laatste_update: formatDate(client.last_update),
+                id: clientId
+            };
+
+            rentalServices.getActiveRentalsByClientId(clientId, (activeError, activeRentals) => {
+                if (activeError) {
+                    res.status(500).send('Error retrieving active rentals');
+                } else {
+                    const formattedActiveRentals = activeRentals.map(rental => ({
+                        film: rental.title,
+                        verhuurd_op: formatDate(rental.Verhuurd_op),
+                        te_retourneren_voor: formatDate(rental.Te_retourneren_voor),
+                        prijs: `€${Number(rental.Prijs).toFixed(2).replace('.', ',')}`
+                    }));
+
+                    rentalServices.getRentalHistoryByClientId(clientId, (rentalError, rentals) => {
+                        if (rentalError) {
+                            res.status(500).send('Error retrieving rental history');
+                        } else {
+                            const formattedRentals = rentals.map(rental => ({
+                                film: rental.title,
+                                verhuurd_op: formatDate(rental.rental_date),
+                                teruggebracht_op: rental.return_date ? formatDate(rental.return_date) : 'Nog niet terug',
+                                prijs: `€${Number(rental.amount).toFixed(2).replace('.', ',')}`
+                            }));
+                            res.render('pages/clientManagement/clientDetail', {
+                                data: { client: formattedClient },
+                                activeRentals: formattedActiveRentals,
+                                rentals: formattedRentals
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    });
     }
 };
 
