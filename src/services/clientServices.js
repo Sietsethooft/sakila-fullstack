@@ -18,7 +18,7 @@ const clientService = {
     },
     getClientDetails(clientId, callback) {
         let query = `
-        SELECT first_name, last_name, email, active, customer.create_date, customer.last_update, address.address, address.district, city.city, country.country 
+        SELECT first_name, last_name, email, active, customer.create_date, customer.last_update, address.address, address.district, city.city, country.country, address.postal_code, address.phone 
         FROM customer
         join address on customer.address_id = address.address_id
         join city on address.city_id = city.city_id

@@ -39,8 +39,10 @@ const clientController = {
                 const formattedClient = {
                     klantnaam: `${client.first_name} ${client.last_name}`,
                     email: client.email,
+                    telefoonnummer: client.phone,
                     actief: client.active ? 'Ja' : 'Nee',
                     adres: `${client.address}, ${client.city}, ${client.district}, ${client.country}`,
+                    postcode: client.postal_code,
                     aangemaakt_op: formatDate(client.create_date),
                     laatste_update: formatDate(client.last_update),
                     id: clientId
