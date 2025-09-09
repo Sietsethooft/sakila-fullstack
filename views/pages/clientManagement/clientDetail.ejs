@@ -5,7 +5,7 @@
             <a href="/clientManagement/<%= data.client.id %>/edit" class="btn btn-warning me-2">
                 <i class="fas fa-edit"></i> Bewerken
             </a>
-            <form action="/clientManagement" class="display-inline" method="POST">
+            <form action="/clientManagement/<%= data.client.id %>/delete" method="POST" style="display:inline;">
                 <button type="submit" class="btn btn-danger" onclick="return confirm('Weet je zeker dat je deze klant wilt verwijderen?');">
                     <i class="fas fa-trash-alt"></i> Verwijderen
                 </button>
@@ -96,3 +96,11 @@
         </tbody>
     </table>
 </section>
+
+<% if (error) { %>
+<script>
+    setTimeout(function() {
+        alert("<%= error %>");
+    }, 250);
+</script>
+<% } %>

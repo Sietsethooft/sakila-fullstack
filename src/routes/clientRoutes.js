@@ -7,6 +7,7 @@ router.get('/', clientController.getAllClients);
 router.get('/create', (req, res) => {
     res.render('pages/clientManagement/clientCreate');
 });
+router.post('/:id/delete', clientController.deleteClient);
 router.get('/:id', clientController.getClientDetails);
 
 module.exports = router;
