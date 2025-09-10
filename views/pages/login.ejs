@@ -1,17 +1,37 @@
-
-
-<div class="login-container">
+<section class="login-container">
   <h1 class="mb-3 fw-bold">Welkom terug!</h1>
   <h3 class="mb-4">Inloggen</h3>
-  <form method="POST" action="/login" class="login-form">
+  <form method="POST" action="/login" class="login-form needs-validation" novalidate>
     <div class="mb-3 input-group">
       <span class="input-group-text"><span class="material-icons">person</span></span>
       <input type="text" name="username" class="form-control" placeholder="Gebruikersnaam" required>
+      <div class="invalid-feedback">
+        Vul je gebruikersnaam in.
+      </div>
     </div>
     <div class="mb-3 input-group">
       <span class="input-group-text"><span class="material-icons">lock</span></span>
       <input type="password" name="password" class="form-control" placeholder="Wachtwoord" required>
+      <div class="invalid-feedback">
+        Vul je wachtwoord in.
+      </div>
     </div>
     <button type="submit" class="btn btn-primary w-100">LOG IN</button>
   </form>
-</div>
+</section>
+
+<script>
+  (() => {
+    'use strict';
+    const forms = document.querySelectorAll('.needs-validation');
+    Array.from(forms).forEach(form => {
+      form.addEventListener('submit', event => {
+        if (!form.checkValidity()) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+      }, false);
+    });
+  })();
+</script>

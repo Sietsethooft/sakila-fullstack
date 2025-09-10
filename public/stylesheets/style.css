@@ -7,26 +7,6 @@ a {
 }
 
 /* --- Modern Sidebar & Header Styling --- */
-
-.login-container {
-  max-width: 600px;
-  margin: 50px auto 0 auto;
-  padding: 40px 30px 30px 30px;
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.07);
-  text-align: center;
-}
-
-.login-form .input-group {
-  margin-bottom: 20px;
-}
-
-.login-form .form-control {
-  height: 48px;
-  font-size: 1.1rem;
-}
-
 .app-container {
   display: flex;
   min-height: 100vh;
@@ -178,30 +158,30 @@ main {
   letter-spacing: 1px;
 }
 
-/* Tabel styling */
-.client-table {
-  border-radius: 12px;
-  overflow: hidden;
-  background: #fff;
-}
+  /* Client Tabel styling */
+  .client-table {
+    border-radius: 12px;
+    overflow: hidden;
+    background: #fff;
+  }
 
-.client-table th {
-  background: #e3e7ee;
-  color: #222;
-  border-color: #d1d5db !important;
-}
+  .client-table th {
+    background: #e3e7ee;
+    color: #222;
+    border-color: #d1d5db !important;
+  }
 
-.client-table td {
-  background: #f6f8fa;
-  color: #222;
-  border-color: #e3e7ee !important;
-}
+  .client-table td {
+    background: #f6f8fa;
+    color: #222;
+    border-color: #e3e7ee !important;
+  }
 
-.client-table tr:hover td {
-  background: #e8f0fe !important;
-  color: #222 !important;
-  cursor: pointer;
-}
+  .client-table tr:hover td {
+    background: #e8f0fe !important;
+    color: #222 !important;
+    cursor: pointer;
+  }
 
 /* Searchbar & button styling */
 .input-group {
@@ -254,6 +234,32 @@ main {
 .btn-search:hover {
   background-color: #283593;
   color: #fff; 
+}
+
+/* Login Page CSS */
+
+.login-container {
+  max-width: 600px;
+  margin: 50px auto 0 auto;
+  padding: 40px 30px 30px 30px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+  text-align: center;
+}
+
+.login-form .input-group {
+  margin-bottom: 20px;
+}
+
+.login-form .form-control {
+  height: 48px;
+  font-size: 1.1rem;
+}
+
+.login-form .input-group .form-control:focus {
+  box-shadow: 0 0 0 2px #3d47a033;
+  outline: none;
 }
 
 /*Extra CSS*/
