@@ -18,7 +18,9 @@ const authController = {
                     error: 'Gebruikersnaam of wachtwoord is onjuist.'
                 });
             }
-            const token = jwt.sign({ id: user.id, username: user.username }, 'secretkey');
+
+            const userFullName = user.first_name + ' ' + user.last_name;
+            const token = jwt.sign({ id: user.id, userFullName: userFullName }, 'secretkey');
             res.cookie('token', token, { httpOnly: true }); // Set token in cookie
             res.redirect('/dashboard');
         });

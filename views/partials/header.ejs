@@ -1,7 +1,7 @@
 <header class="main-header header-color">
   <div class="header-content">
     <% if (user) { %>
-      <span class="user"><%= user.username %></span>
+      <span class="user"><%= user.userFullName %></span>
       <form action="/auth/logout" method="post" style="display:inline; margin-left:16px;">
         <button type="submit" class="logout-btn" title="Uitloggen">
           <i class="material-icons">logout</i>
