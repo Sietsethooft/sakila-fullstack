@@ -32,7 +32,7 @@
         <% if (clients && clients.length > 0) { %>
           <% clients.forEach(function(client) { %>
             <tr class="client-row" data-id="<%= client.customer_id %>">
-              <td><%= client.naam %></td>
+              <td><%= client.name %></td>
               <td><%= client.email %></td>
               <td><%= client.active %></td>
               <td><%= client.last_update %></td>

@@ -12,7 +12,7 @@ const clientController = {
                 const formattedClients = clients.map(client => {
                     return {
                         customer_id: client.customer_id,
-                        naam: `${client.first_name} ${client.last_name}`,
+                        name: `${client.first_name} ${client.last_name}`,
                         email: client.email,
                         active: client.active ? 'Ja' : 'Nee',
                         last_update: formatDate(client.last_update)
@@ -24,9 +24,9 @@ const clientController = {
         });
     },
     getClientDetails(req, res) {
-        const clientId = req.params.id;
+        const customer_id = req.params.id;
         const errorMessage = req.query.error || null;
-        clientServices.getClientDetails(clientId, (error, client) => {
+        clientServices.getClientDetails(customer_id, (error, client) => {
             if (error) {
                 res.status(500).render('pages/error', {
                     message: 'Fout bij het ophalen van klantgegevens',
@@ -39,39 +39,39 @@ const clientController = {
                 });
             } else {
                 const formattedClient = {
-                    klantnaam: `${client.first_name} ${client.last_name}`,
+                    name: `${client.first_name} ${client.last_name}`,
                     email: client.email,
-                    telefoonnummer: client.phone,
-                    actief: client.active ? 'Ja' : 'Nee',
-                    adres: `${client.address}, ${client.city}, ${client.district}, ${client.country}`,
-                    postcode: client.postal_code,
-                    aangemaakt_op: formatDate(client.create_date),
-                    laatste_update: formatDate(client.last_update),
-                    id: clientId
+                    phone: client.phone,
+                    active: client.active ? 'Ja' : 'Nee',
+                    address: `${client.address}, ${client.city}, ${client.district}, ${client.country}`,
+                    postal_code: client.postal_code,
+                    created_at: formatDate(client.create_date),
+                    updated_at: formatDate(client.last_update),
+                    customer_id: customer_id
                 };
 
-                rentalServices.getActiveRentalsByClientId(clientId, (activeError, activeRentals) => {
+                rentalServices.getActiveRentalsByCustomerId(customer_id, (activeError, activeRentals) => {
                     if (activeError) {
                         res.status(500).send('Error retrieving active rentals');
                     } else {
                         const formattedActiveRentals = activeRentals.map(rental => ({
-                            film: rental.title,
-                            verhuurd_op: formatDate(rental.Verhuurd_op),
-                            te_retourneren_voor: formatDate(rental.Te_retourneren_voor),
-                            prijs: `€${Number(rental.Prijs).toFixed(2).replace('.', ',')}`
+                            title: rental.title,
+                            hired_on: formatDate(rental.hired_on),
+                            return_by: formatDate(rental.return_by),
+                            price: `€${Number(rental.price).toFixed(2).replace('.', ',')}`
                         }));
 
-                        rentalServices.getRentalHistoryByClientId(clientId, (rentalError, rentals) => {
+                        rentalServices.getRentalHistoryByCustomerId(customer_id, (rentalError, rentals) => {
                             if (rentalError) {
                                 res.status(500).send('Error retrieving rental history');
                             } else {
                                 const formattedRentals = rentals.map(rental => ({
-                                    film: rental.title,
-                                    verhuurd_op: formatDate(rental.rental_date),
-                                    teruggebracht_op: rental.return_date ? formatDate(rental.return_date) : 'Nog niet terug',
-                                    prijs: `€${Number(rental.amount).toFixed(2).replace('.', ',')}`
+                                    title: rental.title,
+                                    hired_on: formatDate(rental.rental_date),
+                                    returned_on: rental.return_date ? formatDate(rental.return_date) : 'Nog niet terug',
+                                    price: `€${Number(rental.amount).toFixed(2).replace('.', ',')}`
                                 }));
-                                logger.debug(`Client details viewed: ID ${clientId}, Name: ${formattedClient.klantnaam}`);
+                                logger.debug(`Client details viewed: ID ${customer_id}, Name: ${formattedClient.name}`);
                                 res.render('pages/clientManagement/clientDetail', {
                                     data: { client: formattedClient },
                                     activeRentals: formattedActiveRentals,
@@ -86,25 +86,26 @@ const clientController = {
         });
     },
     deleteClient(req, res) {
-        const clientId = req.params.id;
-        rentalServices.getActiveRentalsByClientId(clientId, (err, activeRentals) => { // Check for active rentals
+        const customer_id = req.params.id;
+        logger.debug(`Attempting to delete client: ID ${customer_id}`);
+        rentalServices.getActiveRentalsByCustomerId(customer_id, (err, activeRentals) => { // Check for active rentals
             if (err) {
                 res.status(500).render('pages/error', {
                     message: 'Fout bij het controleren van openstaande verhuren',
                     error: { status: 500, stack: err.stack }
                 });
             } else if (activeRentals && activeRentals.length > 0) {
-                logger.error(`Attempt to delete client with active rentals: ID ${clientId}`);
-                res.redirect(`/clientManagement/${clientId}?error=Klant kan niet worden verwijderd: er zijn nog openstaande verhuren.`);
+                logger.error(`Attempt to delete client with active rentals: ID ${customer_id}`);
+                res.redirect(`/clientManagement/${customer_id}?error=Klant kan niet worden verwijderd: er zijn nog openstaande verhuren.`);
             } else {
-                clientServices.deleteClient(clientId, (deleteErr) => {
+                clientServices.deleteClient(customer_id, (deleteErr) => {
                     if (deleteErr) {
                         res.status(500).render('pages/error', {
                             message: 'Fout bij het verwijderen van klant',
                             error: { status: 500, stack: deleteErr.stack }
                         });
                     } else {
-                        logger.debug(`Client deleted: ID ${clientId}`);
+                        logger.debug(`Client deleted: ID ${customer_id}`);
                         res.redirect('/clientManagement');
                     }
                 });

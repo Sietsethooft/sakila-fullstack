@@ -4,11 +4,11 @@ const clientService = {
     getClients(search, callback) {
         clientDao.getClients(search, callback);
     },
-    getClientDetails(clientId, callback) {
-        clientDao.getClientDetails(clientId, callback);
+    getClientDetails(customer_id, callback) {
+        clientDao.getClientDetails(customer_id, callback);
     },
-    deleteClient(clientId, callback) {
-        clientDao.deleteClient(clientId, callback);
+    deleteClient(customer_id, callback) {
+        clientDao.deleteClient(customer_id, callback);
     },
     createClient(clientData, callback) {
         clientDao.createClient(clientData, callback);

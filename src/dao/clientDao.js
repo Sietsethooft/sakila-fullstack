@@ -15,7 +15,7 @@ getClients(search, callback) {
     db.query(query, params, callback);
 },
 
-getClientDetails(clientId, callback) {
+getClientDetails(customer_id, callback) {
     let query = `
     SELECT first_name, last_name, email, active, customer.create_date, customer.last_update, address.address, address.district, city.city, country.country, address.postal_code, address.phone 
     FROM customer
@@ -24,21 +24,21 @@ getClientDetails(clientId, callback) {
     join country on city.country_id = country.country_id 
     WHERE customer_id = ?;
     `;
-    db.query(query, [clientId], (err, results) => {
+    db.query(query, [customer_id], (err, results) => {
         if (err) return callback(err);
         callback(null, results[0]);
     });
 },
 
-deleteClient(clientId, callback) {
+deleteClient(customer_id, callback) {
     const deleteRentalsQuery = 'DELETE FROM rental WHERE customer_id = ?';
-    db.query(deleteRentalsQuery, [clientId], (err) => {
+    db.query(deleteRentalsQuery, [customer_id], (err) => {
         if (err) return callback(err);
         const deletePaymentsQuery = 'DELETE FROM payment WHERE customer_id = ?';
-        db.query(deletePaymentsQuery, [clientId], (err) => {
+        db.query(deletePaymentsQuery, [customer_id], (err) => {
             if (err) return callback(err);
             const deleteCustomerQuery = 'DELETE FROM customer WHERE customer_id = ?';
-            db.query(deleteCustomerQuery, [clientId], callback);
+            db.query(deleteCustomerQuery, [customer_id], callback);
         });
     });
 },

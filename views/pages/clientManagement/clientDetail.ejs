@@ -1,11 +1,11 @@
 <section class="client-card">
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2><%= data.client.klantnaam %></h2>
+        <h2><%= data.client.name %></h2>
         <div class="mb-1">
-            <a href="/clientManagement/<%= data.client.id %>/edit" class="btn btn-warning me-2">
+            <a href="/clientManagement/<%= data.client.customer_id %>/edit" class="btn btn-warning me-2">
                 <i class="fas fa-edit"></i> Bewerken
             </a>
-            <form action="/clientManagement/<%= data.client.id %>/delete" method="POST" style="display:inline;">
+            <form action="/clientManagement/<%= data.client.customer_id %>/delete" method="POST" style="display:inline;">
                 <button type="submit" class="btn btn-danger" onclick="return confirm('Weet je zeker dat je deze klant wilt verwijderen?');">
                     <i class="fas fa-trash-alt"></i> Verwijderen
                 </button>
@@ -22,15 +22,15 @@
             </tr>
             <tr>
                 <th>Telefoonnummer</th>
-                <td><%= data.client.telefoonnummer %></td>
+                <td><%= data.client.phone %></td>
             </tr>
             <tr>
                 <th>Aangemaakt op</th>
-                <td><%= data.client.aangemaakt_op %></td>
+                <td><%= data.client.created_at %></td>
             </tr>
             <tr>
                 <th>Laatste update</th>
-                <td><%= data.client.laatste_update %></td>
+                <td><%= data.client.updated_at %></td>
             </tr>
         </table>
     </div>
@@ -38,15 +38,15 @@
         <table class="table table-bordered">
             <tr>
                 <th>Adres</th>
-                <td><%= data.client.adres %></td>
+                <td><%= data.client.address %></td>
             </tr>
             <tr>
                 <th>Postcode</th>
-                <td><%= data.client.postcode %></td>
+                <td><%= data.client.postal_code %></td>
             </tr>
             <tr>
                 <th>Actief</th>
-                <td><%= data.client.actief %></td>
+                <td><%= data.client.active %></td>
             </tr>
         </table>
     </div>
@@ -67,10 +67,10 @@
             <% if (activeRentals && activeRentals.length > 0) { %>
                 <% activeRentals.forEach(rental => { %>
                     <tr>
-                        <td><%= rental.film %></td>
-                        <td><%= rental.verhuurd_op %></td>
-                        <td><%= rental.te_retourneren_voor %></td>
-                        <td><%= rental.prijs %></td>
+                        <td><%= rental.title %></td>
+                        <td><%= rental.hired_on %></td>
+                        <td><%= rental.return_by %></td>
+                        <td><%= rental.price %></td>
                     </tr>
                 <% }) %>
             <% } else { %>
@@ -95,10 +95,10 @@
             <% if (rentals && rentals.length > 0) { %>
                 <% rentals.forEach(rental => { %>
                     <tr>
-                        <td><%= rental.film %></td>
-                        <td><%= rental.verhuurd_op %></td>
-                        <td><%= rental.teruggebracht_op %></td>
-                        <td><%= rental.prijs %></td>
+                        <td><%= rental.title %></td>
+                        <td><%= rental.hired_on %></td>
+                        <td><%= rental.returned_on %></td>
+                        <td><%= rental.price %></td>
                     </tr>
                 <% }) %>
             <% } else { %>

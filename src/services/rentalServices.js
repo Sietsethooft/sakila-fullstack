@@ -1,11 +1,11 @@
 const rentalDao = require('../dao/rentalDao');
 
 const rentalService = {
-    getRentalHistoryByClientId(clientId, callback) {
-        rentalDao.getRentalHistoryByClientId(clientId, callback);
+    getRentalHistoryByCustomerId(customer_id, callback) {
+        rentalDao.getRentalHistoryByCustomerId(customer_id, callback);
     },
-    getActiveRentalsByClientId(clientId, callback) {
-        rentalDao.getActiveRentalsByClientId(clientId, callback);
+    getActiveRentalsByCustomerId(customer_id, callback) {
+        rentalDao.getActiveRentalsByCustomerId(customer_id, callback);
     }
 };
 
