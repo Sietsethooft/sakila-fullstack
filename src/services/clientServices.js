@@ -12,6 +12,9 @@ const clientService = {
     },
     createClient(clientData, callback) {
         clientDao.createClient(clientData, callback);
+    },
+    updateClient(customer_id, clientData, callback) {
+        clientDao.updateClient(customer_id, clientData, callback);
     }
 };
 

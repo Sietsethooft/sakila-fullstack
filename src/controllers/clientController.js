@@ -7,7 +7,11 @@ const clientController = {
         const search = req.query.search || '';
         clientServices.getClients(search, (error, clients) => {
             if (error) {
-                res.status(500).send('Error retrieving clients');
+                logger.error(`Error retrieving client details: ID ${customer_id}, Error: ${error.message}`);
+                res.status(500).render('pages/error', {
+                    message: 'Fout bij het ophalen van klantgegevens',
+                    error: { status: 500, stack: error.stack }
+                });
             } else {
                 const formattedClients = clients.map(client => {
                     return {
@@ -28,11 +32,13 @@ const clientController = {
         const errorMessage = req.query.error || null;
         clientServices.getClientDetails(customer_id, (error, client) => {
             if (error) {
+                logger.error(`Error retrieving client details: ID ${customer_id}, Error: ${error.message}`);
                 res.status(500).render('pages/error', {
                     message: 'Fout bij het ophalen van klantgegevens',
                     error: { status: 500, stack: error.stack }
                 });
             } else if (!client) {
+                logger.warn(`Client not found: ID ${customer_id}`); 
                 res.status(404).render('pages/error', {
                     message: 'Klant niet gevonden',
                     error: { status: 404, stack: '' }
@@ -52,6 +58,7 @@ const clientController = {
 
                 rentalServices.getActiveRentalsByCustomerId(customer_id, (activeError, activeRentals) => {
                     if (activeError) {
+                        logger.error(`Error retrieving active rentals for client ID ${customer_id}: ${activeError.message}`);
                         res.status(500).send('Error retrieving active rentals');
                     } else {
                         const formattedActiveRentals = activeRentals.map(rental => ({
@@ -63,6 +70,7 @@ const clientController = {
 
                         rentalServices.getRentalHistoryByCustomerId(customer_id, (rentalError, rentals) => {
                             if (rentalError) {
+                                logger.error(`Error retrieving rental history for client ID ${customer_id}: ${rentalError.message}`);
                                 res.status(500).send('Error retrieving rental history');
                             } else {
                                 const formattedRentals = rentals.map(rental => ({
@@ -90,16 +98,18 @@ const clientController = {
         logger.debug(`Attempting to delete client: ID ${customer_id}`);
         rentalServices.getActiveRentalsByCustomerId(customer_id, (err, activeRentals) => { // Check for active rentals
             if (err) {
+                logger.error(`Error checking active rentals for client ID ${customer_id}: ${err.message}`);
                 res.status(500).render('pages/error', {
                     message: 'Fout bij het controleren van openstaande verhuren',
                     error: { status: 500, stack: err.stack }
                 });
             } else if (activeRentals && activeRentals.length > 0) {
-                logger.error(`Attempt to delete client with active rentals: ID ${customer_id}`);
+                logger.warn(`Cannot delete client ID ${customer_id}: active rentals exist`);
                 res.redirect(`/clientManagement/${customer_id}?error=Klant kan niet worden verwijderd: er zijn nog openstaande verhuren.`);
             } else {
                 clientServices.deleteClient(customer_id, (deleteErr) => {
                     if (deleteErr) {
+                        logger.error(`Error deleting client ID ${customer_id}: ${deleteErr.message}`);
                         res.status(500).render('pages/error', {
                             message: 'Fout bij het verwijderen van klant',
                             error: { status: 500, stack: deleteErr.stack }
@@ -115,15 +125,9 @@ const clientController = {
     createClient(req, res) {
         const { first_name, last_name, email, address, city, district, country, postal_code, phone } = req.body;
 
-        // Validation of required fields
-        if (!first_name || !last_name || !email || !address || !city || !district || !country || !phone) {
-            return res.status(400).render('pages/clientManagement/clientCreate', {
-                error: 'Vul alle verplichte velden in.'
-            });
-        }
-
         clientServices.createClient({first_name, last_name, email, address, city, district, country, postal_code, phone}, (err, result) => {
             if (err) {
+                logger.error(`Error creating client: ${err.message}`);
                 return res.status(500).render('pages/error', {
                     message: 'Fout bij het aanmaken van klant',
                     error: { status: 500, stack: err.stack }
@@ -131,6 +135,41 @@ const clientController = {
             }
             logger.debug(`Client created: ID ${result.insertId}, Name: ${first_name} ${last_name}`);
             res.redirect('/clientManagement');
+        });
+    },
+    getEditClientForm(req, res) {
+        const customer_id = req.params.id;
+        clientServices.getClientDetails(customer_id, (error, client) => {
+            if (error) {
+                logger.error(`Error fetching client for edit: ID ${customer_id}, Error: ${error.message}`);
+                return res.status(500).render('pages/error', {
+                    message: 'Fout bij het ophalen van klantgegevens',
+                    error: { status: 500, stack: error.stack }
+                });
+            }
+            if (!client) {
+                logger.warn(`Client not found for edit: ID ${customer_id}`);
+                return res.status(404).render('pages/error', {
+                    message: 'Klant niet gevonden',
+                    error: { status: 404, stack: '' }
+                });
+            }
+            res.render('pages/clientManagement/clientEdit', {data: {client: {...client, customer_id: customer_id}}});
+        });
+    },
+    updateClient(req, res) {
+        const customer_id = req.params.id;
+        const { first_name, last_name, email, address, city, district, country, postal_code, phone } = req.body;
+        clientServices.updateClient(customer_id, {first_name, last_name, email, address, city, district, country, postal_code, phone}, (error) => {
+            if (error) {
+                logger.error(`Error updating client: ID ${customer_id}, Error: ${error.message}`);
+                return res.status(500).render('pages/error', {
+                    message: 'Fout bij het bijwerken van klantgegevens',
+                    error: { status: 500, stack: error.stack }
+                });
+            }
+            logger.debug(`Client updated: ID ${customer_id}, Name: ${first_name} ${last_name}`);
+            res.redirect(`/clientManagement/${customer_id}`);
         });
     }
 };
