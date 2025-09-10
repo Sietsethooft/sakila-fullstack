@@ -11,7 +11,7 @@ const authController = {
     login (req, res) {
         const { username, password } = req.body;
         logger.debug(`Attempting login for user: ${username}`);
-        authService.authenticate(username, password, (err, user) => {
+        authService.authenticate(username, (err, user) => {
             if (err || !user) {
                 logger.warn(`Login failed for user: ${username} - ${err ? err.message : 'Invalid credentials'}`);
                 return res.render('pages/login', {

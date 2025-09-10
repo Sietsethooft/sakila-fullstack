@@ -1,8 +1,8 @@
 const authDao = require('../dao/authDao');
 
 const authService = {
-    authenticate(username, password, callback) {
-        authDao.findUser(username, password, callback);
+    authenticate(username, callback) {
+        authDao.findUser(username, callback);
     }
 };
 

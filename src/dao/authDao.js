@@ -1,9 +1,9 @@
 const db = require('../models/db');
 
 const authDao = {
-    findUser(username, password, callback) {
-        let query = `SELECT * FROM staff WHERE username = ? AND password = ?`;
-        db.query(query, [username, password], (err, results) => {
+    findUser(username, callback) {
+        let query = `SELECT * FROM staff WHERE username = ?`;
+        db.query(query, [username], (err, results) => {
             if (err) {
                 return callback(err);
             }
