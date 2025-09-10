@@ -30,6 +30,18 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use((req, res, next) => {
+  const jwt = require('jsonwebtoken');
+  const token = req.cookies.token;
+  if (!token) {
+    res.locals.user = null;
+    return next();
+  }
+  jwt.verify(token, 'secretkey', (err, decoded) => {
+    res.locals.user = err ? null : decoded;
+    next();
+  });
+});
 
 app.use((req, res, next) => { // Middleware to set default locals
   res.locals.showFooter = true;
@@ -41,7 +53,7 @@ app.use(expressLayouts);
 app.set('layout', 'layouts/main');
 
 // Routes
-app.use('/', authRouter);
+app.use('/auth', authRouter);
 app.use('/dashboard', dashboardRouter);
 app.use('/about', aboutRouter);
 app.use('/clientManagement', clientRouter);

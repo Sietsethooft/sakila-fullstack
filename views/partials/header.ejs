@@ -1,10 +1,14 @@
 <header class="main-header header-color">
   <div class="header-content">
-    <span class="user">Sietse 't Hooft</span>
-    <form action="/logout" method="post" style="display:inline; margin-left:16px;">
-      <button type="submit" class="logout-btn" title="Uitloggen">
-        <i class="material-icons">logout</i>
-      </button>
-    </form>
+    <% if (user) { %>
+      <span class="user"><%= user.username %></span>
+      <form action="/auth/logout" method="post" style="display:inline; margin-left:16px;">
+        <button type="submit" class="logout-btn" title="Uitloggen">
+          <i class="material-icons">logout</i>
+        </button>
+      </form>
+    <% } else { %>
+      <a href="/auth/login">Log in</a>
+    <% } %>
   </div>
 </header>

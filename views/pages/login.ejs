@@ -1,7 +1,12 @@
 <section class="login-container">
   <h1 class="mb-3 fw-bold">Welkom terug!</h1>
   <h3 class="mb-4">Inloggen</h3>
-  <form method="POST" action="/login" class="login-form needs-validation" novalidate>
+  <% if (error) { %>
+    <div class="alert alert-danger" role="alert">
+      <%= error %>
+    </div>
+  <% } %>
+  <form method="POST" action="/auth/login" class="login-form needs-validation" novalidate>
     <div class="mb-3 input-group">
       <span class="input-group-text"><span class="material-icons">person</span></span>
       <input type="text" name="username" class="form-control" placeholder="Gebruikersnaam" required>
