@@ -1,5 +1,6 @@
 const authService = require('../services/authServices');
 const logger = require('../utils/logger');
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const authController = {
@@ -19,12 +20,24 @@ const authController = {
                 });
             }
 
-            const userFullName = user.first_name + ' ' + user.last_name;
-            const token = jwt.sign({ id: user.id, userFullName: userFullName }, 'secretkey');
-            res.cookie('token', token, { httpOnly: true }); // Set token in cookie
-            res.redirect('/dashboard');
+            // bcrypt password check
+            bcrypt.compare(password, user.password, (bcryptErr, isMatch) => {
+                if (bcryptErr || !isMatch) {
+                    logger.warn(`Login failed for user: ${username} - Invalid password`);
+                    return res.render('pages/login', {
+                        showFooter: false,
+                        error: 'Gebruikersnaam of wachtwoord is onjuist.'
+                    });
+                }
+
+                const userFullName = user.first_name + ' ' + user.last_name;
+                const token = jwt.sign({ id: user.id, userFullName: userFullName }, 'secretkey');
+                res.cookie('token', token, { httpOnly: true }); // Set token in cookie
+                res.redirect('/dashboard');
+            });
         });
     }
-};
+}
+
 
 module.exports = authController;
