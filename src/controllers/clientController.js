@@ -1,5 +1,6 @@
 const clientServices = require('../services/clientServices');
 const rentalServices = require('../services/rentalServices');
+const logger = require('../utils/logger');
 
 const clientController = {
     getAllClients(req, res){
@@ -17,6 +18,7 @@ const clientController = {
                         last_update: formatDate(client.last_update)
                     };
                 });
+                logger.debug(`Amount of clients: ${formattedClients.length}`);
                 res.render('pages/clientManagement/clientIndex', { clients: formattedClients });
             }
         });
@@ -69,6 +71,7 @@ const clientController = {
                                     teruggebracht_op: rental.return_date ? formatDate(rental.return_date) : 'Nog niet terug',
                                     prijs: `€${Number(rental.amount).toFixed(2).replace('.', ',')}`
                                 }));
+                                logger.debug(`Client details viewed: ID ${clientId}, Name: ${formattedClient.klantnaam}`);
                                 res.render('pages/clientManagement/clientDetail', {
                                     data: { client: formattedClient },
                                     activeRentals: formattedActiveRentals,
@@ -91,6 +94,7 @@ const clientController = {
                     error: { status: 500, stack: err.stack }
                 });
             } else if (activeRentals && activeRentals.length > 0) {
+                logger.error(`Attempt to delete client with active rentals: ID ${clientId}`);
                 res.redirect(`/clientManagement/${clientId}?error=Klant kan niet worden verwijderd: er zijn nog openstaande verhuren.`);
             } else {
                 clientServices.deleteClient(clientId, (deleteErr) => {
@@ -100,6 +104,7 @@ const clientController = {
                             error: { status: 500, stack: deleteErr.stack }
                         });
                     } else {
+                        logger.debug(`Client deleted: ID ${clientId}`);
                         res.redirect('/clientManagement');
                     }
                 });
@@ -107,17 +112,7 @@ const clientController = {
         });
     },
     createClient(req, res) {
-        const {
-            first_name,
-            last_name,
-            email,
-            address,
-            city,
-            district,
-            country,
-            postal_code,
-            phone
-        } = req.body;
+        const { first_name, last_name, email, address, city, district, country, postal_code, phone } = req.body;
 
         // Validation of required fields
         if (!first_name || !last_name || !email || !address || !city || !district || !country || !phone) {
@@ -126,23 +121,14 @@ const clientController = {
             });
         }
 
-        clientServices.createClient({
-            first_name,
-            last_name,
-            email,
-            address,
-            city,
-            district,
-            country,
-            postal_code,
-            phone
-        }, (err, result) => {
+        clientServices.createClient({first_name, last_name, email, address, city, district, country, postal_code, phone}, (err, result) => {
             if (err) {
                 return res.status(500).render('pages/error', {
                     message: 'Fout bij het aanmaken van klant',
                     error: { status: 500, stack: err.stack }
                 });
             }
+            logger.debug(`Client created: ID ${result.insertId}, Name: ${first_name} ${last_name}`);
             res.redirect('/clientManagement');
         });
     }
