@@ -15,7 +15,9 @@
       <main>
         <%- body %>
       </main>
-      <%- include('../partials/footer') %>
+      <% if (typeof showFooter === 'undefined' || showFooter) { %>
+        <%- include('../partials/footer') %>
+      <% } %>
     </div>
   </div>
 </body>

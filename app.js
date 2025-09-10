@@ -8,6 +8,7 @@ const expressLayouts = require('express-ejs-layouts');
 const dashboardRouter = require('./src/routes/dashboardRoutes');
 const aboutRouter = require('./src/routes/aboutRoutes');
 const clientRouter = require('./src/routes/clientRoutes');
+const authRouter = require('./src/routes/authRoutes');
 
 const app = express();
 
@@ -30,12 +31,17 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use((req, res, next) => { // Middleware to set default locals
+  res.locals.showFooter = true;
+  next();
+});
+
 // Layouts activation
 app.use(expressLayouts);
 app.set('layout', 'layouts/main');
 
 // Routes
-app.use('/', dashboardRouter);
+app.use('/', authRouter);
 app.use('/dashboard', dashboardRouter);
 app.use('/about', aboutRouter);
 app.use('/clientManagement', clientRouter);
