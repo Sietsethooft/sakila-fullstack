@@ -16,7 +16,8 @@
     "http-errors": "~1.6.3",
     "morgan": "^1.10.1",
     "mysql": "^2.18.1",
-    "mysql2": "^3.14.4"
+    "mysql2": "^3.14.4",
+    "winston": "^3.17.0"
   },
   "devDependencies": {
     "chai": "^6.0.1",
