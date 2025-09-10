@@ -262,6 +262,32 @@ main {
   outline: none;
 }
 
+.btn-login {
+  background: linear-gradient(90deg, #5e35b1 0%, #3949ab 100%);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 28px;
+  font-weight: 600;
+  font-size: 1.15rem;
+  text-decoration: none;
+  box-shadow: 0 4px 16px rgba(57,73,171,0.10);
+  transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+  margin-left: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  letter-spacing: 0.5px;
+}
+
+.btn-login:hover {
+  background: linear-gradient(90deg, #3949ab 0%, #5e35b1 100%);
+  box-shadow: 0 6px 24px rgba(57,73,171,0.18);
+  transform: scale(1.04);
+  color: #fff;
+  text-decoration: none;
+}
+
 /*Extra CSS*/
 
 .p-40 {
