@@ -44,8 +44,7 @@ const clientDao = {
     },
 
     createClient(clientData, callback) {
-        const { first_name, last_name, email, address, district, city, country, postal_code, phone } = clientData;
-        const storeId = 1; // Temp hardcoded store_id
+        const { first_name, last_name, email, address, district, city, country, postal_code, phone, storeId } = clientData;
 
         db.query('START TRANSACTION', (err) => {
             if (err) return callback(err);
@@ -56,7 +55,7 @@ const clientDao = {
                 ON DUPLICATE KEY UPDATE country_id = LAST_INSERT_ID(country_id)
             `;
             db.query(countrySql, [country], (err, result) => {
-                if (err) return rollback(err);
+                if (err) return rollback(callback, err);
 
                 const countryId = result.insertId;
 
@@ -66,7 +65,7 @@ const clientDao = {
                     ON DUPLICATE KEY UPDATE city_id = LAST_INSERT_ID(city_id)
                 `;
                 db.query(citySql, [city, countryId], (err, result) => {
-                    if (err) return rollback(err);
+                    if (err) return rollback(callback, err);
 
                     const cityId = result.insertId;
 
@@ -75,7 +74,7 @@ const clientDao = {
                         VALUES (?, '', ?, ?, ?, ?, NOW(), ST_GeomFromText('POINT(0 0)', 0))
                     `;
                     db.query(addressSql, [address, district, cityId, postal_code, phone], (err, result) => {
-                        if (err) return rollback(err);
+                        if (err) return rollback(callback, err);
 
                         const addressId = result.insertId;
 
@@ -84,14 +83,14 @@ const clientDao = {
                             VALUES (?, ?, ?, ?, ?, 1, NOW(), NOW())
                         `;
                         db.query(customerSql, [storeId, first_name, last_name, email, addressId], (err, result) => {
-                            if (err) return rollback(err);
+                            if (err) return rollback(callback, err);
 
-                            const customerId = result.insertId;
+                            const customer_id = result.insertId;
 
                             db.query('COMMIT', (err) => {
-                                if (err) return rollback(err);
+                                if (err) return rollback(callback, err);
 
-                                callback(null, { customerId, first_name, last_name, email });
+                                callback(null, { customer_id, first_name, last_name, email });
                             });
                         });
                     });
@@ -99,6 +98,7 @@ const clientDao = {
             });
         });
     },
+
     updateClient(clientId, clientData, callback) {
         const { first_name, last_name, email, address, district, city, country, postal_code, phone } = clientData;
 
@@ -111,7 +111,7 @@ const clientDao = {
                 ON DUPLICATE KEY UPDATE country_id = LAST_INSERT_ID(country_id)
             `;
             db.query(countrySql, [country], (err, result) => {
-                if (err) return rollback(err);
+                if (err) return rollback(callback, err);
 
                 const countryId = result.insertId;
 
@@ -121,15 +121,15 @@ const clientDao = {
                     ON DUPLICATE KEY UPDATE city_id = LAST_INSERT_ID(city_id)
                 `;
                 db.query(citySql, [city, countryId], (err, result) => {
-                    if (err) return rollback(err);
+                    if (err) return rollback(callback, err);
 
                     const cityId = result.insertId;
 
                     // First get the address_id of the customer
                     const addressIdSql = `SELECT address_id FROM customer WHERE customer_id = ?`;
                     db.query(addressIdSql, [clientId], (err, rows) => {
-                        if (err) return rollback(err);
-                        if (rows.length === 0) return rollback(new Error("Customer not found"));
+                        if (err) return rollback(callback, err);
+                        if (!rows || rows.length === 0) return rollback(callback, new Error("Customer not found"));
 
                         const addressId = rows[0].address_id;
 
@@ -140,7 +140,7 @@ const clientDao = {
                             WHERE address_id = ?
                         `;
                         db.query(addressSql, [address, district, cityId, postal_code, phone, addressId], (err) => {
-                            if (err) return rollback(err);
+                            if (err) return rollback(callback, err);
 
                             // Update the customer
                             const customerSql = `
@@ -149,10 +149,10 @@ const clientDao = {
                                 WHERE customer_id = ?
                             `;
                             db.query(customerSql, [first_name, last_name, email, clientId], (err) => {
-                                if (err) return rollback(err);
+                                if (err) return rollback(callback, err);
 
                                 db.query('COMMIT', (err) => {
-                                    if (err) return rollback(err);
+                                    if (err) return rollback(callback, err);
 
                                     callback(null, { clientId, first_name, last_name, email });
                                 });

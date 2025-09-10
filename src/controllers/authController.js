@@ -31,7 +31,8 @@ const authController = {
                 }
 
                 const userFullName = user.first_name + ' ' + user.last_name;
-                const token = jwt.sign({ id: user.id, userFullName: userFullName }, 'secretkey');
+                logger.debug(`userid: ${user.staff_id}, userFullName: ${userFullName}`);
+                const token = jwt.sign({ id: user.staff_id, userFullName: userFullName }, 'secretkey');
                 res.cookie('token', token, { httpOnly: true }); // Set token in cookie
                 res.redirect('/dashboard');
             });

@@ -30,6 +30,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+// JWT Middleware : set user info in res.locals if token is valid
 app.use((req, res, next) => {
   const jwt = require('jsonwebtoken');
   const token = req.cookies.token;
@@ -57,6 +59,10 @@ app.use('/auth', authRouter);
 app.use('/dashboard', dashboardRouter);
 app.use('/about', aboutRouter);
 app.use('/clientManagement', clientRouter);
+
+app.use('/', (req, res) => {
+  res.render('pages/dashboard');
+});
 
 // Catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -1,5 +1,6 @@
 const clientServices = require('../services/clientServices');
 const rentalServices = require('../services/rentalServices');
+const staffServices = require('../services/staffServices');
 const logger = require('../utils/logger');
 
 const clientController = {
@@ -124,17 +125,31 @@ const clientController = {
     },
     createClient(req, res) {
         const { first_name, last_name, email, address, city, district, country, postal_code, phone } = req.body;
+        const staff_id = res.locals.user ? res.locals.user.id : undefined;
+        logger.debug(`staff_id from JWT: ${staff_id}`);
 
-        clientServices.createClient({first_name, last_name, email, address, city, district, country, postal_code, phone}, (err, result) => {
+        staffServices.getStoreIdByStaffId(staff_id, (err, storeId) => {
             if (err) {
-                logger.error(`Error creating client: ${err.message}`);
+                logger.error(`Error fetching store_id for staff_id ${staff_id}: ${err.message}`);
                 return res.status(500).render('pages/error', {
-                    message: 'Fout bij het aanmaken van klant',
+                    message: 'Fout bij het ophalen van store_id',
                     error: { status: 500, stack: err.stack }
-                });
+                }); 
             }
-            logger.debug(`Client created: ID ${result.insertId}, Name: ${first_name} ${last_name}`);
-            res.redirect('/clientManagement');
+
+            logger.debug(`Store ID ${storeId} fetched for staff ID ${staff_id}`);
+
+            clientServices.createClient({first_name, last_name, email, address, city, district, country, postal_code, phone, storeId}, (err, result) => {
+                if (err) {
+                    logger.error(`Error creating client: ${err.message}`);
+                    return res.status(500).render('pages/error', {
+                        message: 'Fout bij het aanmaken van klant',
+                        error: { status: 500, stack: err.stack }
+                    });
+                }
+                logger.debug(`Client created: ID ${result.customer_id}, Name: ${first_name} ${last_name}`);
+                res.redirect(`/clientManagement/${result.customer_id}`);
+            });
         });
     },
     getEditClientForm(req, res) {
