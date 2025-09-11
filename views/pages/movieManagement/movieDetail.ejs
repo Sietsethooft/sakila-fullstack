@@ -72,55 +72,59 @@
     </div>
   </div>
 
-  <h3>Openstaande Verhuren</h3>
-  <table class="table-800 table table-bordered">
-    <thead>
+<h3>Openstaande Verhuren</h3>
+<table class="table-800 table table-bordered">
+  <thead>
+    <tr>
+      <th>Klant</th>
+      <th>Verhuurd op</th>
+      <th>Te retourneren voor</th>
+      <th>Prijs</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if (activeRentals && activeRentals.length > 0) { %>
+      <% activeRentals.forEach(function(rental) { %>
+        <tr>
+          <td><%= rental.customer_name %></td>
+          <td><%= rental.rental_date %></td>
+          <td><%= rental.return_by %></td>
+          <td>€ <%= rental.amount %></td>
+        </tr>
+      <% }); %>
+    <% } else { %>
       <tr>
-        <th>Klant</th>
-        <th>Verhuurd op</th>
-        <th>Te retourneren voor</th>
-        <th>Prijs</th>
+        <td colspan="4" class="text-center">Geen openstaande verhuren</td>
       </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>Jan Jansen</td>
-        <td>2025-09-01</td>
-        <td>2025-09-15</td>
-        <td>€ 2,99</td>
-      </tr>
-      <tr>
-        <td>Lisa de Vries</td>
-        <td>2025-09-05</td>
-        <td>2025-09-19</td>
-        <td>€ 2,99</td>
-      </tr>
-    </tbody>
-  </table>
+    <% } %>
+  </tbody>
+</table>
 
-  <h3>Verhuurgeschiedenis</h3>
-  <table class="table-800 table table-bordered">
-    <thead>
+<h3>Verhuurgeschiedenis</h3>
+<table class="table-800 table table-bordered">
+  <thead>
+    <tr>
+      <th>Klant</th>
+      <th>Verhuurd op</th>
+      <th>Teruggebracht op</th>
+      <th>Prijs</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if (rentalHistory && rentalHistory.length > 0) { %>
+      <% rentalHistory.forEach(function(rental) { %>
+        <tr>
+          <td><%= rental.customer_name %></td>
+          <td><%= rental.rental_date %></td>
+          <td><%= rental.return_date %></td>
+          <td>€ <%= rental.amount %></td>
+        </tr>
+      <% }); %>
+    <% } else { %>
       <tr>
-        <th>Klant</th>
-        <th>Verhuurd op</th>
-        <th>Teruggebracht op</th>
-        <th>Prijs</th>
+        <td colspan="4" class="text-center">Geen verhuurgeschiedenis</td>
       </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>Piet Pietersen</td>
-        <td>2025-08-10</td>
-        <td>2025-08-24</td>
-        <td>€ 2,99</td>
-      </tr>
-      <tr>
-        <td>Anna Bakker</td>
-        <td>2025-07-20</td>
-        <td>2025-08-03</td>
-        <td>€ 2,99</td>
-      </tr>
-    </tbody>
-  </table>
+    <% } %>
+  </tbody>
+</table>
 </section>

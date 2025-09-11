@@ -6,6 +6,12 @@ const rentalService = {
     },
     getActiveRentalsByCustomerId(customer_id, callback) {
         rentalDao.getActiveRentalsByCustomerId(customer_id, callback);
+    },
+    getRentalHistoryByFilmId(film_id, callback) {
+        rentalDao.getRentalHistoryByFilmId(film_id, callback);
+    },
+    getActiveRentalsByFilmId(film_id, callback) {
+        rentalDao.getActiveRentalsByFilmId(film_id, callback);
     }
 };
 
