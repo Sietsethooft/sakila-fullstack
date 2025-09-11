@@ -1,7 +1,7 @@
 const db = require('../models/db');
 
 const movieDao = {
-    getMovies({ search, language, category }, callback) {
+    getMovies({ search, language, category, rating }, callback) {
         let query = `
             SELECT f.film_id, f.title, f.description, f.release_year, f.rating, l.name as language_name, c.name as category_name 
             FROM film f
@@ -23,6 +23,10 @@ const movieDao = {
         if (category) {
             query += ' AND c.name = ?';
             params.push(category);
+        }
+        if (rating) {
+            query += ' AND f.rating = ?';
+            params.push(rating);
         }
 
         db.query(query, params, (error, results) => {

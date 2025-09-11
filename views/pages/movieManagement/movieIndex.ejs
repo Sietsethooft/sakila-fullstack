@@ -22,6 +22,12 @@
               <option value="<%= category.name %>"><%= category.name %></option>
             <% }); %>
         </select>
+        <select class="form-select no-focus" name="rating" style="width:120px;">
+            <option value="">Rating</option>
+            <% ratings.forEach(function(ratingObj) { %>
+              <option value="<%= ratingObj.rating %>"><%= ratingObj.rating %></option>
+            <% }); %>
+        </select>
     </form>
     <button class="btn btn-primary mt-2 mt-md-0" type="button" id="add-movie-btn">
       <i class="fas fa-film me-2"></i> Film toevoegen

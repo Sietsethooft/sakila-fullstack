@@ -1,14 +1,15 @@
 const movieService = require('../services/movieServices');
 const languageService = require('../services/languageServices');
 const categoryService = require('../services/categoryServices');
+const ratingService = require('../services/ratingServices');
 const logger = require('../utils/logger');
 const formatDate = require('../utils/formatDate');
 
 const movieController = {
     getAllMovies (req, res) {
-        const { search, language, category } = req.query;
+        const { search, language, category, rating } = req.query;
 
-        movieService.getMovies({ search, language, category }, (error, movies) => {
+        movieService.getMovies({ search, language, category, rating }, (error, movies) => {
             if (error) {
                 logger.error(`Error retrieving movies: ${error.message}`);
                 return res.status(500).render('pages/error', {
@@ -32,8 +33,18 @@ const movieController = {
                             error: { status: 500, stack: catError.stack }
                         });
                     }
+                    ratingService.getRatings((ratError, ratings) => {
+                        if (ratError) {
+                            logger.error(`Error retrieving ratings: ${ratError.message}`);
+                            return res.status(500).render('pages/error', {
+                                message: 'Fout bij het ophalen van ratings',
+                                error: { status: 500, stack: ratError.stack }
+                            });
+                    }
+                    logger.debug(`ratings found: ${ratings.map(r => r.rating).join(', ')}`);
                     logger.debug(`Movies retrieved successfully: ${movies.length} found`);
-                    res.render('pages/movieManagement/movieIndex', { movies, languages, categories });
+                    res.render('pages/movieManagement/movieIndex', { movies, languages, categories, ratings });
+                    });
                 });
             });
         });
