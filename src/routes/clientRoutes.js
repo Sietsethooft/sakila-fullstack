@@ -12,8 +12,8 @@ router.get('/create', authMiddleware, (req, res) => {
 router.get('/:id/edit', authMiddleware, clientController.getEditClientForm);
 
 router.post('/:id/delete', authMiddleware, clientController.deleteClient);
-router.post('/create', authMiddleware, customerValidation, clientController.createClient);
-router.post('/:id/update', authMiddleware, customerValidation, clientController.updateClient);
+router.post('/create', authMiddleware, customerValidation.createValidation, clientController.createClient);
+router.post('/:id/update', authMiddleware, customerValidation.updateValidation, clientController.updateClient);
 
 router.get('/:id', authMiddleware, clientController.getClientDetails);
 

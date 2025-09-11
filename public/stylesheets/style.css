@@ -257,7 +257,7 @@ main {
   font-size: 1.1rem;
 }
 
-.login-form .input-group .form-control:focus {
+.input-field-focus:focus {
   box-shadow: 0 0 0 2px #3d47a033;
   outline: none;
 }
