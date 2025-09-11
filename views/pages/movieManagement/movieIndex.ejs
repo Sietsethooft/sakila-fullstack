@@ -10,93 +10,48 @@
             </svg>
             </button>
         </div>
-
         <select class="form-select no-focus" name="language" style="width:120px;">
             <option value="">Taal</option>
             <option value="Engels">Engels</option>
             <option value="Frans">Frans</option>
             <option value="Japans">Japans</option>
         </select>
-
         <select class="form-select no-focus" name="category" style="width:120px;">
             <option value="">Categorie</option>
             <option value="Actie">Actie</option>
             <option value="Komedie">Komedie</option>
             <option value="Animatie">Animatie</option>
         </select>
-        </form>
+    </form>
     <button class="btn btn-primary mt-2 mt-md-0" type="button" id="add-movie-btn">
       <i class="fas fa-film me-2"></i> Film toevoegen
     </button>
   </div>
   <div class="row g-4">
-    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-      <div class="card movie-block h-100 shadow-sm" style="cursor:pointer;" onclick="window.location.href='/movieManagement/1'">
-        <img src="https://picsum.photos/320/180?random=1" class="card-img-top" alt="The Matrix">
-        <div class="card-body">
-          <h5 class="card-title">The Matrix</h5>
-          <p class="card-text">Een hacker ontdekt de waarheid over zijn wereld.</p>
-          <div class="mb-2">
-            <span class="badge bg-primary">Actie</span>
-            <span class="badge bg-secondary ms-1">Engels</span>
-          </div>
-          <div class="d-flex justify-content-between small text-muted">
-            <span>1999</span>
-            <span>Rating: NC-17</span>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-      <div class="card movie-block h-100 shadow-sm" style="cursor:pointer;" onclick="window.location.href='/movieManagement/2'">
-        <img src="https://picsum.photos/320/180?random=2" class="card-img-top" alt="Amélie">
-        <div class="card-body">
-          <h5 class="card-title">Amélie</h5>
-          <p class="card-text">Een jonge vrouw helpt mensen in haar buurt.</p>
-          <div class="mb-2">
-            <span class="badge bg-success">Komedie</span>
-            <span class="badge bg-secondary ms-1">Frans</span>
-          </div>
-          <div class="d-flex justify-content-between small text-muted">
-            <span>2001</span>
-            <span>Rating: PG</span>
+    <% movies.forEach(function(movie, idx) { %>
+      <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+        <div class="card movie-block h-100 shadow-sm" style="cursor:pointer;" onclick="window.location.href='/movieManagement/<%= movie.id %>'">
+          <img src="https://picsum.photos/320/180?random=<%= idx %>" class="card-img-top" alt="<%= movie.title %>">
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title"><%= movie.title %></h5>
+            <p class="card-text">
+              <%= movie.description.length > 100 ? movie.description.substring(0, 100) + "..." : movie.description %>
+            </p>
+            <div class="mt-auto">
+              <div class="mb-2">
+                <span class="badge bg-secondary">
+                  <%= movie.category_name %>
+                </span>
+                <span class="badge bg-secondary ms-1"><%= movie.language_name %></span>
+              </div>
+              <div class="d-flex justify-content-between small text-muted">
+                <span><%= movie.release_year %></span>
+                <span>Rating: <%= movie.rating %></span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-      <div class="card movie-block h-100 shadow-sm" style="cursor:pointer;" onclick="window.location.href='/movieManagement/3'">
-        <img src="https://picsum.photos/320/180?random=3" class="card-img-top" alt="Spirited Away">
-        <div class="card-body">
-          <h5 class="card-title">Spirited Away</h5>
-          <p class="card-text">Een meisje komt terecht in een magische wereld.</p>
-          <div class="mb-2">
-            <span class="badge bg-info text-dark">Animatie</span>
-            <span class="badge bg-secondary ms-1">Japans</span>
-          </div>
-          <div class="d-flex justify-content-between small text-muted">
-            <span>2001</span>
-            <span>Rating: PG</span>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-      <div class="card movie-block h-100 shadow-sm" style="cursor:pointer;" onclick="window.location.href='/movieManagement/3'">
-        <img src="https://picsum.photos/320/180?random=4" class="card-img-top" alt="Spirited Away">
-        <div class="card-body">
-          <h5 class="card-title">Spirited Away</h5>
-          <p class="card-text">Een meisje komt terecht in een magische wereld. Deze tekst is expres echt enorm lang om te testen of er verschil is</p>
-          <div class="mb-2">
-            <span class="badge bg-info text-dark">Animatie</span>
-            <span class="badge bg-secondary ms-1">Japans</span>
-          </div>
-          <div class="d-flex justify-content-between small text-muted">
-            <span>2001</span>
-            <span>Rating: PG</span>
-          </div>
-        </div>
-      </div>
-    </div>
+    <% }); %>
   </div>
 </section>
