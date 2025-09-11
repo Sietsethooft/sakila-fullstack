@@ -1,6 +1,6 @@
 <section class="client-card">
     <div class="d-flex justify-content-between align-items-center">
-        <h2>The matrix</h2>
+        <h2><%= movie.title %></h2>
         <div class="mb-1">
             <a href="/clientManagement//edit" class="btn btn-warning me-2">
                 <i class="fas fa-edit"></i> Bewerken
@@ -13,60 +13,59 @@
         </div>
     </div>
 
-<p style="max-width: 80%"><em>Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima, eaque accusantium at, magnam eveniet quibusdam laboriosam in accusamus nesciunt minus id sint perferendis nulla amet fuga quidem ea dicta? Ducimus.</em></p>
+<p style="max-width: 80%"><em><%= movie.description %></em></p>
 
   <div class="row mb-4">
     <div class="col-md-6">
-      <table class="table table-bordered">
+        <table class="table table-bordered">
         <colgroup>
             <col style="width:35%">
             <col style="width:65%">
         </colgroup>
         <tr>
-          <th>Categorie</th>
-          <td>Actie</td>
+            <th>Categorie</th>
+            <td><%= movie.category_name %></td>
         </tr>
         <tr>
-          <th>Taal</th>
-          <td>Engels</td>
+            <th>Taal</th>
+            <td><%= movie.language_name %></td>
         </tr>
         <tr>
-          <th>Jaar</th>
-          <td>1999</td>
+            <th>Jaar</th>
+            <td><%= movie.release_year %></td>
         </tr>
         <tr>
-          <th>Duur</th>
-          <td>136 minuten</td>
+            <th>Duur</th>
+            <td><%= movie.length %> minuten</td>
         </tr>
         <tr>
-          <th>Rating</th>
-          <td>NC-17</td>
+            <th>Rating</th>
+            <td><%= movie.rating %></td>
         </tr>
         <tr>
-          <th>Speciale features</th>
-          <td>Behind the Scenes, Trailers</td>
+            <th>Speciale features</th>
+            <td><%= movie.special_features %></td>
         </tr>
         <tr>
-          <th>Laatste update</th>
-          <td>2025-09-11</td>
+            <th>Laatste update</th>
+            <td><%= movie.last_update %></td>
         </tr>
-      </table>
+        </table>
 
-      <table class="table table-bordered">
+        <table class="table table-bordered">
         <colgroup>
             <col style="width:35%">
             <col style="width:65%">
         </colgroup>
         <tr>
-          <th>Verhuurprijs</th>
-          <td>€ 2,99</td>
+            <th>Verhuurprijs</th>
+            <td>€ <%= movie.rental_rate %></td>
         </tr>
-
         <tr>
-          <th>Beschikbaar</th>
-          <td>3 van 10</td>
+            <th>Beschikbaar</th>
+            <td><%= movie.total_available %> van <%= movie.total_inventory %></td>
         </tr>
-      </table>
+        </table>
     </div>
     <div class="col-md-4 align-items-center justify-content-center">
       <img src="https://picsum.photos/480/320?random=1" class="img-fluid rounded shadow movie-img-large" alt="The Matrix">

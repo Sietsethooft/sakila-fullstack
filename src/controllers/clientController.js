@@ -2,6 +2,7 @@ const clientServices = require('../services/clientServices');
 const rentalServices = require('../services/rentalServices');
 const staffServices = require('../services/staffServices');
 const logger = require('../utils/logger');
+const formatDate = require('../utils/formatDate');
 
 const clientController = {
     getAllClients(req, res){
@@ -191,12 +192,5 @@ const clientController = {
         });
     }
 };
-
-function formatDate(dateStr) {
-    const date = new Date(dateStr);
-    return `${date.getDate().toString().padStart(2, '0')}/` +
-           `${(date.getMonth()+1).toString().padStart(2, '0')}/` +
-           `${date.getFullYear()}`;
-}
 
 module.exports = clientController;

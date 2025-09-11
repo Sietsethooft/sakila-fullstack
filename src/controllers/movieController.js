@@ -2,6 +2,7 @@ const movieService = require('../services/movieServices');
 const languageService = require('../services/languageServices');
 const categoryService = require('../services/categoryServices');
 const logger = require('../utils/logger');
+const formatDate = require('../utils/formatDate');
 
 const movieController = {
     getAllMovies (req, res) {
@@ -35,6 +36,29 @@ const movieController = {
                     res.render('pages/movieManagement/movieIndex', { movies, languages, categories });
                 });
             });
+        });
+    },
+    getMovieById (req, res) {
+        const film_id = req.params.id;
+        movieService.getMovieById(film_id, (error, movie) => {
+            if (error) {
+                logger.error(`Error retrieving movie: ${error.message}`);
+                return res.status(500).render('pages/error', {
+                    message: 'Fout bij het ophalen van film',
+                    error: { status: 500, stack: error.stack }
+                });
+            }
+            else if (!movie) {
+                logger.warn(`Movie not found: ID ${film_id}`);
+                res.status(404).render('pages/error', {
+                    message: 'Film niet gevonden',
+                    error: { status: 404, stack: '' }
+                });
+            }
+            if (movie && movie.last_update) {
+                movie.last_update = formatDate(movie.last_update);
+            }
+            res.render('pages/movieManagement/movieDetail', { movie });
         });
     }
 };
