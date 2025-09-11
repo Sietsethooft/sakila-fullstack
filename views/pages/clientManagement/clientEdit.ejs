@@ -1,4 +1,6 @@
 <section class="client-card">
+    <script src="/js/clientEdit.js"></script>
+
     <h2 class="mb-4">Klant bewerken</h2>
 
     <% if (typeof errors !== 'undefined' && errors.length > 0) { %>
@@ -65,15 +67,3 @@
         <button type="submit" class="btn btn-primary">Opslaan</button>
     </form>
 </section>
-
-<script>
-// Bootstrap client-side validation
-document.getElementById('edit-client-form').addEventListener('submit', function(event) {
-    const form = event.target;
-    if (!form.checkValidity()) {
-        event.preventDefault();
-        event.stopPropagation();
-    }
-    form.classList.add('was-validated');
-});
-</script>
