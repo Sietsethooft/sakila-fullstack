@@ -6,6 +6,8 @@ const logger = require('../utils/logger');
 const clientController = {
     getAllClients(req, res){
         const search = req.query.search || '';
+        const success = req.query.success || null;
+        logger.debug(`success query param: ${success}`);
         clientServices.getClients(search, (error, clients) => {
             if (error) {
                 logger.error(`Error retrieving client details: ID ${customer_id}, Error: ${error.message}`);
@@ -24,13 +26,14 @@ const clientController = {
                     };
                 });
                 logger.debug(`Amount of clients: ${formattedClients.length}`);
-                res.render('pages/clientManagement/clientIndex', { clients: formattedClients });
+                res.render('pages/clientManagement/clientIndex', { clients: formattedClients, success: success});
             }
         });
     },
     getClientDetails(req, res) {
         const customer_id = req.params.id;
         const errorMessage = req.query.error || null;
+        const success = req.query.success || null;
         clientServices.getClientDetails(customer_id, (error, client) => {
             if (error) {
                 logger.error(`Error retrieving client details: ID ${customer_id}, Error: ${error.message}`);
@@ -85,7 +88,8 @@ const clientController = {
                                     data: { client: formattedClient },
                                     activeRentals: formattedActiveRentals,
                                     rentals: formattedRentals,
-                                    error: errorMessage
+                                    error: errorMessage,
+                                    success: success
                                 });
                             }
                         });
@@ -106,7 +110,7 @@ const clientController = {
                 });
             } else if (activeRentals && activeRentals.length > 0) {
                 logger.warn(`Cannot delete client ID ${customer_id}: active rentals exist`);
-                res.redirect(`/clientManagement/${customer_id}?error=Klant kan niet worden verwijderd: er zijn nog openstaande verhuren.`);
+                res.redirect(`/clientManagement/${customer_id}?error=Er zijn nog openstaande verhuren.`);
             } else {
                 clientServices.deleteClient(customer_id, (deleteErr) => {
                     if (deleteErr) {
@@ -117,7 +121,7 @@ const clientController = {
                         });
                     } else {
                         logger.debug(`Client deleted: ID ${customer_id}`);
-                        res.redirect('/clientManagement');
+                        res.redirect('/clientManagement?success=3');
                     }
                 });
             }
@@ -148,7 +152,7 @@ const clientController = {
                     });
                 }
                 logger.debug(`Client created: ID ${result.customer_id}, Name: ${first_name} ${last_name}`);
-                res.redirect(`/clientManagement/${result.customer_id}`);
+                res.redirect(`/clientManagement/${result.customer_id}?success=1`);
             });
         });
     },
@@ -184,7 +188,7 @@ const clientController = {
                 });
             }
             logger.debug(`Client updated: ID ${customer_id}, Name: ${first_name} ${last_name}`);
-            res.redirect(`/clientManagement/${customer_id}`);
+            res.redirect(`/clientManagement/${customer_id}?success=2`);
         });
     }
 };

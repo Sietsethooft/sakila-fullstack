@@ -1,15 +1,24 @@
 <section class="client-card">
+    <!-- Load all javascripts from public/javascript-->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+    window.clientError = '<%= error ? error : '' %>';
+    window.clientSuccess = '<%= success ? success : '' %>';
+    </script>
+    <script src="/javascripts/clientScripts/clientDetail.js"></script>
+    <script src="/javascripts/clientScripts/clientAlerts.js"></script>
+
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2><%= data.client.name %></h2>
         <div class="mb-1">
             <a href="/clientManagement/<%= data.client.customer_id %>/edit" class="btn btn-warning me-2">
                 <i class="fas fa-edit"></i> Bewerken
             </a>
-            <form action="/clientManagement/<%= data.client.customer_id %>/delete" method="POST" style="display:inline;">
-                <button type="submit" class="btn btn-danger" onclick="return confirm('Weet je zeker dat je deze klant wilt verwijderen?');">
+            <form id="delete-client-form" action="/clientManagement/<%= data.client.customer_id %>/delete" method="POST" style="display:inline;">
+                <button type="button" class="btn btn-danger" id="delete-client-btn">
                     <i class="fas fa-trash-alt"></i> Verwijderen
                 </button>
-            </form>
+            </form>           
         </div>
     </div>
 
@@ -109,11 +118,3 @@
         </tbody>
     </table>
 </section>
-
-<% if (error) { %>
-<script>
-    setTimeout(function() {
-        alert("<%= error %>");
-    }, 250);
-</script>
-<% } %>
