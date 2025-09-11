@@ -9,6 +9,7 @@ const dashboardRouter = require('./src/routes/dashboardRoutes');
 const aboutRouter = require('./src/routes/aboutRoutes');
 const clientRouter = require('./src/routes/clientRoutes');
 const authRouter = require('./src/routes/authRoutes');
+const movieRouter = require('./src/routes/movieRoutes');
 
 const app = express();
 
@@ -59,6 +60,7 @@ app.use('/auth', authRouter);
 app.use('/dashboard', dashboardRouter);
 app.use('/about', aboutRouter);
 app.use('/clientManagement', clientRouter);
+app.use('/movieManagement', movieRouter);
 
 app.use('/', (req, res) => {
   res.render('pages/dashboard');

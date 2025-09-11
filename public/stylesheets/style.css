@@ -236,6 +236,14 @@ main {
   color: #fff; 
 }
 
+.search-form-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap; 
+}
+
+
 /* Login Page CSS */
 
 .login-container {
@@ -259,6 +267,11 @@ main {
 
 .input-field-focus:focus {
   box-shadow: 0 0 0 2px #3d47a033;
+  outline: none;
+}
+
+.no-focus:focus {
+  box-shadow: none;
   outline: none;
 }
 
