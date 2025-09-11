@@ -18,7 +18,7 @@ app.set('view engine', 'ejs');
 
 // Log all requests
 app.use((req, res, next) => {
-  const excludedPaths = ['/stylesheets/style.css'];
+  const excludedPaths = ['/stylesheets/style.css', '/favicon.ico'];
   if (!excludedPaths.includes(req.url)) {
     logger.http(`${req.method} ${req.url}`);
   }
