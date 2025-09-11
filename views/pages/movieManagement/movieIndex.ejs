@@ -12,15 +12,15 @@
         </div>
         <select class="form-select no-focus" name="language" style="width:120px;">
             <option value="">Taal</option>
-            <option value="Engels">Engels</option>
-            <option value="Frans">Frans</option>
-            <option value="Japans">Japans</option>
+            <% languages.forEach(function(language) { %>
+              <option value="<%= language.name %>"><%= language.name %></option>
+            <% }); %>
         </select>
         <select class="form-select no-focus" name="category" style="width:120px;">
             <option value="">Categorie</option>
-            <option value="Actie">Actie</option>
-            <option value="Komedie">Komedie</option>
-            <option value="Animatie">Animatie</option>
+            <% categories.forEach(function(category) { %>
+              <option value="<%= category.name %>"><%= category.name %></option>
+            <% }); %>
         </select>
     </form>
     <button class="btn btn-primary mt-2 mt-md-0" type="button" id="add-movie-btn">
@@ -30,7 +30,7 @@
   <div class="row g-4">
     <% movies.forEach(function(movie, idx) { %>
       <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-        <div class="card movie-block h-100 shadow-sm" style="cursor:pointer;" onclick="window.location.href='/movieManagement/<%= movie.id %>'">
+        <div class="card movie-block h-100 shadow-sm" style="cursor:pointer;" onclick="window.location.href='/movieManagement/<%= movie.film_id %>'">
           <img src="https://picsum.photos/320/180?random=<%= idx %>" class="card-img-top" alt="<%= movie.title %>">
           <div class="card-body d-flex flex-column">
             <h5 class="card-title"><%= movie.title %></h5>

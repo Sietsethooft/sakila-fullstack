@@ -56,15 +56,15 @@ app.use(expressLayouts);
 app.set('layout', 'layouts/main');
 
 // Routes
+app.get('/', (req, res) => {
+  res.render('pages/dashboard');
+});
+
 app.use('/auth', authRouter);
 app.use('/dashboard', dashboardRouter);
 app.use('/about', aboutRouter);
 app.use('/clientManagement', clientRouter);
 app.use('/movieManagement', movieRouter);
-
-app.use('/', (req, res) => {
-  res.render('pages/dashboard');
-});
 
 // Catch 404 and forward to error handler
 app.use(function(req, res, next) {
