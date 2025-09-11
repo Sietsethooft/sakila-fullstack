@@ -301,6 +301,14 @@ main {
   text-decoration: none;
 }
 
+/* Movie Detail Page CSS */
+.movie-img-large {
+  max-width: 150%;
+  object-fit: cover;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+}
+
 /*Extra CSS*/
 
 .p-40 {
