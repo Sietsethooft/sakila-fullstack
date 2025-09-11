@@ -5,7 +5,9 @@ const logger = require('../utils/logger');
 
 const movieController = {
     getAllMovies (req, res) {
-        movieService.getMovies((error, movies) => {
+        const { search, language, category } = req.query;
+
+        movieService.getMovies({ search, language, category }, (error, movies) => {
             if (error) {
                 logger.error(`Error retrieving movies: ${error.message}`);
                 return res.status(500).render('pages/error', {

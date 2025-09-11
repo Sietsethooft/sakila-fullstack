@@ -1,8 +1,8 @@
 const movieDao = require('../dao/movieDao');
 
 const movieService = {
-    getMovies(callback) {
-        movieDao.getMovies(callback);
+    getMovies(filters, callback) {
+        movieDao.getMovies(filters, callback);
     }
 };
 
