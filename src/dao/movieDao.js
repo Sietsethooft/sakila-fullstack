@@ -45,8 +45,10 @@ const movieDao = {
                 f.release_year, 
                 l.name AS language_name, 
                 c.name AS category_name, 
+                c.category_id,
                 f.length, 
                 f.rental_rate, 
+                f.rental_duration,
                 f.rating,  
                 f.last_update
             FROM film f
@@ -61,7 +63,7 @@ const movieDao = {
             GROUP BY 
                 f.film_id, f.title, f.description, f.release_year, 
                 l.name, c.name, f.length, f.rental_rate, 
-                f.rating, f.special_features, f.last_update;
+                f.rating, f.special_features, f.last_update, c.category_id, f.rental_duration;
         `;
 
         db.query(query, [film_id], (err, results) => {
@@ -209,8 +211,130 @@ const movieDao = {
                 });
             });
         });
-    }
+    },
+    updateMovie(movieId, movieData, callback) {
+        const {
+            title,
+            description,
+            release_year,
+            language_name,
+            category_id,
+            rating,
+            rental_duration,
+            rental_rate,
+            length,
+            inventory
+        } = movieData;
 
+        db.query('START TRANSACTION', (err) => {
+            if (err) return callback(err);
+
+            // 1. Ensure language exists (insert or reuse existing one)
+            const languageSql = `
+                INSERT INTO language (name)
+                VALUES (?)
+                ON DUPLICATE KEY UPDATE language_id = LAST_INSERT_ID(language_id)
+            `;
+            db.query(languageSql, [language_name], (err, result) => {
+                if (err) return rollback(callback, err);
+
+                const languageId = result.insertId;
+
+                // 2. Update film details
+                const filmSql = `
+                    UPDATE film
+                    SET title = ?,
+                        description = ?,
+                        release_year = ?,
+                        language_id = ?,
+                        rental_duration = ?,
+                        rental_rate = ?,
+                        length = ?,
+                        rating = ?,
+                        last_update = NOW()
+                    WHERE film_id = ?
+                `;
+                db.query(filmSql, [
+                    title,
+                    description || null,
+                    release_year || null,
+                    languageId,
+                    rental_duration,
+                    rental_rate,
+                    length || null,
+                    rating,
+                    movieId
+                ], (err) => {
+                    if (err) return rollback(callback, err);
+
+                    // 3. Update film category
+                    const categorySql = `
+                        UPDATE film_category
+                        SET category_id = ?, last_update = NOW()
+                        WHERE film_id = ?
+                    `;
+                    db.query(categorySql, [category_id, movieId], (err) => {
+                        if (err) return rollback(callback, err);
+
+                        // 4. Count current inventory for this film
+                        const countInventorySql = `
+                            SELECT COUNT(*) AS count
+                            FROM inventory
+                            WHERE film_id = ?
+                        `;
+                        db.query(countInventorySql, [movieId], (err, rows) => {
+                            if (err) return rollback(callback, err);
+
+                            const currentCount = rows[0].count;
+
+                            if (inventory > currentCount) {
+                                // Need to add new copies
+                                const addCount = inventory - currentCount;
+                                const storeId = 1; // default store
+                                const values = Array.from({ length: addCount }, () => [movieId, storeId, new Date()]);
+
+                                const insertInventorySql = `
+                                    INSERT INTO inventory (film_id, store_id, last_update)
+                                    VALUES ?
+                                `;
+                                db.query(insertInventorySql, [values], (err) => {
+                                    if (err) return rollback(callback, err);
+
+                                    commitSuccess();
+                                });
+                            } else if (inventory < currentCount) {
+                                // Need to remove excess copies (remove latest ones)
+                                const removeCount = currentCount - inventory;
+
+                                const deleteInventorySql = `
+                                    DELETE FROM inventory
+                                    WHERE film_id = ?
+                                    ORDER BY inventory_id DESC
+                                    LIMIT ?
+                                `;
+                                db.query(deleteInventorySql, [movieId, removeCount], (err) => {
+                                    if (err) return rollback(callback, err);
+
+                                    commitSuccess();
+                                });
+                            } else {
+                                // No changes needed in inventory
+                                commitSuccess();
+                            }
+                        });
+                    });
+                });
+            });
+        });
+
+        function commitSuccess() {
+            db.query('COMMIT', (err) => {
+                if (err) return rollback(callback, err);
+
+                callback(null, { success: true, updatedFilmId: movieId });
+            });
+        }
+    }
 }
 
 

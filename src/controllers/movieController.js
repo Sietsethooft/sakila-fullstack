@@ -179,6 +179,70 @@ const movieController = {
             }
         });
     },
+    getEditMovieForm(req, res) {
+        const film_id = req.params.id;
+        movieService.getMovieById(film_id, (error, movie) => {
+            if (error) {
+                logger.error(`Error fetching movie for edit: ID ${film_id}, Error: ${error.message}`);
+                return res.status(500).render('pages/error', {
+                    message: 'Error retrieving movie details',
+                    error: { status: 500, stack: error.stack }
+                });
+            }
+            if (!movie) {
+                logger.warn(`Movie not found for edit: ID ${film_id}`);
+                return res.status(404).render('pages/error', {
+                    message: 'Movie not found',
+                    error: { status: 404, stack: '' }
+                });
+            }
+            categoryService.getCategories((catError, categories) => {
+                if (catError) {
+                    logger.error(`Error retrieving categories: ${catError.message}`);
+                    return res.status(500).render('pages/error', {
+                        message: 'Error retrieving categories',
+                        error: { status: 500, stack: catError.stack }
+                    });
+                }
+                ratingService.getRatings((ratError, ratings) => {
+                    if (ratError) {
+                        logger.error(`Error retrieving ratings: ${ratError.message}`);
+                        return res.status(500).render('pages/error', {
+                            message: 'Error retrieving ratings',
+                            error: { status: 500, stack: ratError.stack }
+                        });
+                    }
+                    const ratingStrings = ratings.map(r => r.rating || r);
+                    res.render('pages/movieManagement/movieEdit', { movie, categories, ratings: ratingStrings });
+                });
+            });
+        });
+    },
+
+    updateMovie(req, res) {
+        const film_id = req.params.id;
+        const { title, description, release_year, language_name, category_id, rating, rental_duration, rental_rate, length, inventory} = req.body;
+
+        // Normalize language_name: first letter uppercase, rest lowercase
+        let normalizedLanguage = language_name
+            ? language_name.charAt(0).toUpperCase() + language_name.slice(1).toLowerCase()
+            : language_name;
+
+        movieService.updateMovie(film_id, {
+            title, description, release_year, language_name: normalizedLanguage,
+            category_id, rating, rental_duration, rental_rate, length, inventory
+        }, (error) => {
+            if (error) {
+                logger.error(`Error updating movie: ID ${film_id}, Error: ${error.message}`);
+                return res.status(500).render('pages/error', {
+                    message: 'Error updating movie details',
+                    error: { status: 500, stack: error.stack }
+                });
+            }
+            logger.debug(`Movie updated: ID ${film_id}, Title: ${title}`);
+            res.redirect(`/movieManagement/${film_id}?success=2`);
+        });
+    },
 };
 
 module.exports = movieController;
