@@ -17,10 +17,16 @@ const app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-// Log all requests
+// Log all requests except static files
 app.use((req, res, next) => {
-  const excludedPaths = ['/stylesheets/style.css', '/favicon.ico'];
-  if (!excludedPaths.includes(req.url)) {
+  const excludedPaths = [
+    '/stylesheets/style.css',
+    '/favicon.ico'
+  ];
+  if (
+    !excludedPaths.includes(req.url) &&
+    !req.url.startsWith('/javascripts/')
+  ) {
     logger.http(`${req.method} ${req.url}`);
   }
   next();
