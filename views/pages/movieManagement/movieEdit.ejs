@@ -27,7 +27,8 @@
             <div class="col-md-6">
                 <div class="input-card p-3 shadow-sm rounded">
                     <label for="release_year" class="form-label fw-bold">Year</label>
-                    <input type="number" class="form-control input-field-focus" id="release_year" name="release_year" min="1900" max="2099" value="<%= movie.release_year %>">
+                    <input type="number" class="form-control input-field-focus" id="release_year" name="release_year" min="1800" value="<%= movie.release_year %>">
+                    <div class="invalid-feedback">Please enter a year between 1800 and the current year.</div>
                 </div>
             </div>
             <div class="col-md-6">
@@ -100,6 +101,13 @@
 </section>
 
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const releaseYearInput = document.getElementById('release_year');
+        const currentYear = new Date().getFullYear();
+        releaseYearInput.max = currentYear;
+    });
+
+
     document.getElementById('edit-movie-form').addEventListener('submit', function(event) {
         const form = event.target;
         if (!form.checkValidity()) {

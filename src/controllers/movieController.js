@@ -146,8 +146,8 @@ const movieController = {
                     error: { status: 500, stack: error.stack } 
                 });
             }
-            logger.info(`Movie created successfully: ${movie.title}`);
-            res.redirect('/movieManagement');
+            logger.info(`Movie created successfully: ${movie.title} with ID ${movie.film_id}`);
+            res.redirect(`/movieManagement/${movie.film_id}?success=1`);
         });
     },
     deleteMovie(req, res) {
