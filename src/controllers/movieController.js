@@ -103,6 +103,47 @@ const movieController = {
                 });
             });
         });
+    },
+    renderCreateMovieForm (req, res) {
+        categoryService.getCategories((catError, categories) => {
+            if (catError) {
+                logger.error(`Error retrieving categories: ${catError.message}`);
+                return res.status(500).render('pages/error', {
+                    message: 'Fout bij het ophalen van categorieën',
+                    error: { status: 500, stack: catError.stack }
+                });
+            }
+            ratingService.getRatings((ratError, ratings) => {
+                if (ratError) {
+                    logger.error(`Error retrieving ratings: ${ratError.message}`);
+                    return res.status(500).render('pages/error', {
+                        message: 'Fout bij het ophalen van ratings',
+                        error: { status: 500, stack: ratError.stack }
+                    });
+                }
+                // ratings omzetten naar array van strings
+                const ratingStrings = ratings.map(r => r.rating);
+                // categories loggen als array van category_name
+                logger.debug('Recieved categories: ' + categories.map(c => c.category_name).join(', ') +
+                            ', ratings: ' + ratingStrings.join(', '));
+                res.render('pages/movieManagement/movieCreate', { categories, ratings: ratingStrings, errors: [] });
+            });
+        });
+    },
+    createMovie (req, res) {
+        const { title, description, release_year, language_name, category_id, rating, rental_duration, rental_rate, length, inventory } = req.body;
+        logger.debug(`Creating movie with data: title=${title}, description=${description}, release_year=${release_year}, language_name=${language_name}, category_id=${category_id}, rating=${rating}, rental_duration=${rental_duration}, rental_rate=${rental_rate}, length=${length}, inventory=${inventory}`);
+        movieService.createMovie({ title, description, release_year, language_name, category_id, rating, rental_duration, rental_rate, length, inventory }, (error, movie) => {
+            if (error) {
+                logger.error(`Error creating movie: ${error.message}`);
+                return res.status(500).render('pages/error', { 
+                    message: 'Fout bij het aanmaken van film', 
+                    error: { status: 500, stack: error.stack } 
+                });
+            }
+            logger.info(`Movie created successfully: ${movie.title}`);
+            res.redirect('/movieManagement');
+        });
     }
 };
 
