@@ -70,59 +70,76 @@ const movieDao = {
         });
     },
     createMovie(movieData, callback) {
-        const { title, description, release_year, language_name, category_id, rating, rental_duration, rental_rate, length, inventory } = movieData;
+        const { 
+            title, description, release_year, language_name, 
+            category_id, rating, rental_duration, rental_rate, 
+            length, inventory 
+        } = movieData;
 
         db.query('START TRANSACTION', (err) => {
             if (err) return callback(err);
 
-            // 1. Language insert or get existing
-            const languageSql = `
-                INSERT INTO language (name)
-                VALUES (?)
-                ON DUPLICATE KEY UPDATE language_id = LAST_INSERT_ID(language_id)
-            `;
-            db.query(languageSql, [language_name], (err, result) => {
+            // 1. Check if language exists
+            const selectLangSql = `SELECT language_id FROM language WHERE name = ? LIMIT 1`;
+            db.query(selectLangSql, [language_name], (err, results) => {
                 if (err) return rollback(callback, err);
 
-                const languageId = result.insertId;
+                const insertLanguageIfNeeded = (cb) => {
+                    if (results.length > 0) {
+                        // language bestaat al
+                        return cb(null, results[0].language_id);
+                    } else {
+                        // language bestaat niet → nieuwe invoegen
+                        const insertLangSql = `INSERT INTO language (name) VALUES (?)`;
+                        db.query(insertLangSql, [language_name], (err, result) => {
+                            if (err) return rollback(callback, err);
+                            return cb(null, result.insertId);
+                        });
+                    }
+                };
 
-                // 2. Add film
-                const filmSql = `
-                    INSERT INTO film 
-                        (title, description, release_year, language_id, 
-                        rental_duration, rental_rate, length, rating, replacement_cost, last_update)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())
-                `;
-                db.query(filmSql, [
-                    title, description || null, release_year || null, languageId,rental_duration, rental_rate, length || null, rating, 19.99 // replacement_cost
-                ], (err, result) => {
+                insertLanguageIfNeeded((err, languageId) => {
                     if (err) return rollback(callback, err);
 
-                    const filmId = result.insertId;
-
-                    // 3. Link film to category
-                    const filmCategorySql = `
-                        INSERT INTO film_category (film_id, category_id, last_update)
-                        VALUES (?, ?, NOW())
+                    // 2. Insert film
+                    const filmSql = `
+                        INSERT INTO film 
+                            (title, description, release_year, language_id, 
+                            rental_duration, rental_rate, length, rating, replacement_cost, last_update)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())
                     `;
-                    db.query(filmCategorySql, [filmId, category_id], (err) => {
+                    db.query(filmSql, [
+                        title, description || null, release_year || null, languageId,
+                        rental_duration, rental_rate, length || null, rating, 19.99
+                    ], (err, result) => {
                         if (err) return rollback(callback, err);
 
-                        // 4. Create inventory records
-                        const storeId = 1; // TEMP hardcoded store_id
-                        const values = Array.from({ length: inventory }, () => [filmId, storeId, new Date()]);
+                        const filmId = result.insertId;
 
-                        const inventorySql = `
-                            INSERT INTO inventory (film_id, store_id, last_update)
-                            VALUES ?
+                        // 3. Link film to category
+                        const filmCategorySql = `
+                            INSERT INTO film_category (film_id, category_id, last_update)
+                            VALUES (?, ?, NOW())
                         `;
-                        db.query(inventorySql, [values], (err) => {
+                        db.query(filmCategorySql, [filmId, category_id], (err) => {
                             if (err) return rollback(callback, err);
 
-                            db.query('COMMIT', (err) => {
+                            // 4. Insert inventory copies
+                            const storeId = 1; // hardcoded
+                            const values = Array.from({ length: inventory }, () => [filmId, storeId, new Date()]);
+
+                            const inventorySql = `
+                                INSERT INTO inventory (film_id, store_id, last_update)
+                                VALUES ?
+                            `;
+                            db.query(inventorySql, [values], (err) => {
                                 if (err) return rollback(callback, err);
 
-                                callback(null, { filmId, title, inventory });
+                                db.query('COMMIT', (err) => {
+                                    if (err) return rollback(callback, err);
+
+                                    callback(null, { filmId, title, inventory });
+                                });
                             });
                         });
                     });
@@ -130,14 +147,9 @@ const movieDao = {
             });
         });
 
-        function rollback(callback, err) {
-            db.query('ROLLBACK', () => {
-                callback(err);
-            });
-        }
     },
+}
 
-};
 
 function rollback(callback, err) {
     db.query('ROLLBACK', () => {

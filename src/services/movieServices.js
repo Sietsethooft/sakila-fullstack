@@ -1,4 +1,3 @@
-const { createMovie } = require('../controllers/movieController');
 const movieDao = require('../dao/movieDao');
 
 const movieService = {
