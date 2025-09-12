@@ -14,7 +14,7 @@ const movieController = {
             if (error) {
                 logger.error(`Error retrieving movies: ${error.message}`);
                 return res.status(500).render('pages/error', {
-                    message: 'Fout bij het ophalen van films',
+                    message: 'Error retrieving movies',
                     error: { status: 500, stack: error.stack }
                 });
             }
@@ -22,7 +22,7 @@ const movieController = {
                 if (langError) {
                     logger.error(`Error retrieving languages: ${langError.message}`);
                     return res.status(500).render('pages/error', {
-                        message: 'Fout bij het ophalen van talen',
+                        message: 'Error retrieving languages',
                         error: { status: 500, stack: langError.stack }
                     });
                 }
@@ -30,7 +30,7 @@ const movieController = {
                     if (catError) {
                         logger.error(`Error retrieving categories: ${catError.message}`);
                         return res.status(500).render('pages/error', {
-                            message: 'Fout bij het ophalen van categorieën',
+                            message: 'Error retrieving categories',
                             error: { status: 500, stack: catError.stack }
                         });
                     }
@@ -38,7 +38,7 @@ const movieController = {
                         if (ratError) {
                             logger.error(`Error retrieving ratings: ${ratError.message}`);
                             return res.status(500).render('pages/error', {
-                                message: 'Fout bij het ophalen van ratings',
+                                message: 'Error retrieving ratings',
                                 error: { status: 500, stack: ratError.stack }
                             });
                         }
@@ -55,14 +55,14 @@ const movieController = {
             if (error) {
                 logger.error(`Error retrieving movie: ${error.message}`);
                 return res.status(500).render('pages/error', {
-                    message: 'Fout bij het ophalen van film',
+                    message: 'Error retrieving movie',
                     error: { status: 500, stack: error.stack }
                 });
             }
             else if (!movie) {
                 logger.warn(`Movie not found: ID ${film_id}`);
                 res.status(404).render('pages/error', {
-                    message: 'Film niet gevonden',
+                    message: 'Movie not found',
                     error: { status: 404, stack: '' }
                 });
             }
@@ -74,14 +74,14 @@ const movieController = {
                     if (rentalError) {
                         logger.error(`Error retrieving rental history: ${rentalError.message}`);
                         return res.status(500).render('pages/error', {
-                            message: 'Fout bij het ophalen van verhuurgeschiedenis',
+                            message: 'Error retrieving rental history',
                             error: { status: 500, stack: rentalError.stack }
                         });
                     }
                     if (activeError) {
                         logger.error(`Error retrieving active rentals: ${activeError.message}`);
                         return res.status(500).render('pages/error', {
-                            message: 'Fout bij het ophalen van actieve verhuur',
+                            message: 'Error retrieving active rentals',
                             error: { status: 500, stack: activeError.stack }
                         });
                     }
@@ -109,7 +109,7 @@ const movieController = {
             if (catError) {
                 logger.error(`Error retrieving categories: ${catError.message}`);
                 return res.status(500).render('pages/error', {
-                    message: 'Fout bij het ophalen van categorieën',
+                    message: 'Error retrieving categories',
                     error: { status: 500, stack: catError.stack }
                 });
             }
@@ -117,7 +117,7 @@ const movieController = {
                 if (ratError) {
                     logger.error(`Error retrieving ratings: ${ratError.message}`);
                     return res.status(500).render('pages/error', {
-                        message: 'Fout bij het ophalen van ratings',
+                        message: 'Error retrieving ratings',
                         error: { status: 500, stack: ratError.stack }
                     });
                 }
@@ -139,7 +139,7 @@ const movieController = {
             if (error) {
                 logger.error(`Error creating movie: ${error.message}`);
                 return res.status(500).render('pages/error', { 
-                    message: 'Fout bij het aanmaken van film', 
+                    message: 'Error creating movie', 
                     error: { status: 500, stack: error.stack } 
                 });
             }

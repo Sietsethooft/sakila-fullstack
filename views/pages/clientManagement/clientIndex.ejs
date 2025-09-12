@@ -8,14 +8,14 @@
   <script src="/javascripts/clientScripts/clientAlerts.js"></script>
 
 
-  <h2 class="h2-head">Klantbeheer</h2>
+  <h2 class="h2-head">Client-management</h2>
   <div class="d-flex justify-content-between align-items-center mb-3">
     <form class="d-flex" method="GET" action="">
       <div class="input-group">
         <input type="search" class="form-control searchbar"
               id="datatable-search-input"
               name="search"
-              placeholder="Klantnaam"
+              placeholder="Client name"
               style="min-width: 300px;">
         <button class="btn btn-search" type="submit">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
@@ -25,16 +25,16 @@
       </div>
     </form>
         <button class="btn btn-primary" type="button" id="add-client-btn">
-      <i class="fas fa-user-plus me-2"></i> Klant toevoegen
+      <i class="fas fa-user-plus me-2"></i> Create client
     </button>
   </div>
   <div class="table-responsive">
     <table class="table table-bordered client-table">
       <thead>
         <tr>
-          <th>Naam</th>
-          <th>Email</th>
-          <th>Actief</th>
+          <th>Name</th>
+          <th>E-mail</th>
+          <th>Active</th>
           <th>Updated</th>
         </tr>
       </thead>
@@ -50,7 +50,7 @@
           <% }); %>
         <% } else { %>
           <tr>
-            <td colspan="4" class="text-center">Geen klanten gevonden.</td>
+            <td colspan="4" class="text-center">No clients found.</td>
           </tr>
         <% } %>
       </tbody>

@@ -54,14 +54,14 @@ function validateMovie(body) {
     const { title, description, language_name, category_id, rating, rental_duration, rental_rate, inventory } = body;
     const errors = [];
 
-    if (!title) errors.push('Titel is verplicht.');
-    if (!description) errors.push('Beschrijving is verplicht.');
-    if (!language_name) errors.push('Taal is verplicht.');
-    if (!category_id) errors.push('Categorie is verplicht.');
-    if (!rating) errors.push('Rating is verplicht.');
-    if (!rental_duration) errors.push('Verhuurduur is verplicht.');
-    if (!rental_rate) errors.push('Verhuurprijs is verplicht.');
-    if (!inventory) errors.push('Aantal exemplaren is verplicht.');
+    if (!title) errors.push('Title is required.');
+    if (!description) errors.push('Description is required.');
+    if (!language_name) errors.push('Language is required.');
+    if (!category_id) errors.push('Category is required.');
+    if (!rating) errors.push('Rating is required.');
+    if (!rental_duration) errors.push('Rental duration is required.');
+    if (!rental_rate) errors.push('Rental price is required.');
+    if (!inventory) errors.push('Number of copies is required.');
 
     return errors;
 }

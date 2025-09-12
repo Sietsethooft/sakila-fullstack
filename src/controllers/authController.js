@@ -16,7 +16,7 @@ const authController = {
                 logger.warn(`Login failed for user: ${username} - ${err ? err.message : 'Invalid credentials'}`);
                 return res.render('pages/login', {
                     showFooter: false,
-                    error: 'Gebruikersnaam of wachtwoord is onjuist.'
+                    error: 'Username or password is incorrect.'
                 });
             }
 
@@ -26,7 +26,7 @@ const authController = {
                     logger.warn(`Login failed for user: ${username} - Invalid password`);
                     return res.render('pages/login', {
                         showFooter: false,
-                        error: 'Gebruikersnaam of wachtwoord is onjuist.'
+                        error: 'Username or password is incorrect.'
                     });
                 }
 
@@ -40,6 +40,5 @@ const authController = {
         });
     }
 }
-
 
 module.exports = authController;

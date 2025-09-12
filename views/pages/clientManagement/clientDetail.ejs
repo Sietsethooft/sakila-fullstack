@@ -12,11 +12,11 @@
         <h2><%= data.client.name %></h2>
         <div class="mb-1">
             <a href="/clientManagement/<%= data.client.customer_id %>/edit" class="btn btn-warning me-2">
-                <i class="fas fa-edit"></i> Bewerken
+                <i class="fas fa-edit"></i> Edit
             </a>
             <form id="delete-client-form" action="/clientManagement/<%= data.client.customer_id %>/delete" method="POST" style="display:inline;">
                 <button type="button" class="btn btn-danger" id="delete-client-btn">
-                    <i class="fas fa-trash-alt"></i> Verwijderen
+                    <i class="fas fa-trash-alt"></i> Delete
                 </button>
             </form>           
         </div>
@@ -26,19 +26,19 @@
     <div class="col-md-6">
         <table class="table table-bordered">
             <tr>
-                <th>Email</th>
+                <th>E-mail</th>
                 <td><%= data.client.email %></td>
             </tr>
             <tr>
-                <th>Telefoonnummer</th>
+                <th>Phone number</th>
                 <td><%= data.client.phone %></td>
             </tr>
             <tr>
-                <th>Aangemaakt op</th>
+                <th>Created at</th>
                 <td><%= data.client.created_at %></td>
             </tr>
             <tr>
-                <th>Laatste update</th>
+                <th>Last updated</th>
                 <td><%= data.client.updated_at %></td>
             </tr>
         </table>
@@ -46,30 +46,29 @@
     <div class="col-md-6">
         <table class="table table-bordered">
             <tr>
-                <th>Adres</th>
+                <th>Address</th>
                 <td><%= data.client.address %></td>
             </tr>
             <tr>
-                <th>Postcode</th>
+                <th>Postal Code</th>
                 <td><%= data.client.postal_code %></td>
             </tr>
             <tr>
-                <th>Actief</th>
+                <th>Active</th>
                 <td><%= data.client.active %></td>
             </tr>
         </table>
     </div>
 </div>
-<!-- ...rest van je code... -->
 
-    <h3>Openstaande Verhuren</h3>
+    <h3>Outstanding Rentals</h3>
     <table class="table-800 table table-bordered">
         <thead>
             <tr>
                 <th>Film</th>
-                <th>Verhuurd op</th>
-                <th>Te retourneren voor</th>
-                <th>Prijs</th>
+                <th>Hired on</th>
+                <th>Return by</th>
+                <th>Price</th>
             </tr>
         </thead>
         <tbody>
@@ -84,20 +83,20 @@
                 <% }) %>
             <% } else { %>
                 <tr>
-                    <td colspan="4" class="text-center">Geen openstaande verhuren gevonden.</td>
+                    <td colspan="4" class="text-center">No outstanding rentals found.</td>
                 </tr>
             <% } %>
         </tbody>
     </table>
 
-    <h3>Verhuurgeschiedenis</h3>
+    <h3>Rental History</h3>
     <table class="table-800 table table-bordered">
         <thead>
             <tr>
                 <th>Film</th>
-                <th>Verhuurd op</th>
-                <th>Teruggebracht op</th>
-                <th>Prijs</th>
+                <th>Hired on</th>
+                <th>Returned on</th>
+                <th>Price</th>
             </tr>
         </thead>
         <tbody>
@@ -112,7 +111,7 @@
                 <% }) %>
             <% } else { %>
                 <tr>
-                    <td colspan="4" class="text-center">Geen verhuurgeschiedenis gevonden.</td>
+                    <td colspan="4" class="text-center">No rental history found.</td>
                 </tr>
             <% } %>
         </tbody>

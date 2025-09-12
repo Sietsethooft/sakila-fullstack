@@ -28,15 +28,15 @@ function validateCustomer(body) {
     const { first_name, last_name, email, address, city, district, country, phone } = body;
     const errors = [];
 
-    if (!first_name) errors.push('Voornaam is verplicht.');
-    if (!last_name) errors.push('Achternaam is verplicht.');
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.push('Vul een geldig emailadres in.');
-    if (!address) errors.push('Adres is verplicht.');
-    if (!city) errors.push('Stad is verplicht.');
-    if (!district) errors.push('District is verplicht.');
-    if (!country) errors.push('Land is verplicht.');
-    if (!phone || !/^(\+?\d{1,3}[- ]?)?\d{10}$/.test(phone)) errors.push('Vul een geldig telefoonnummer in (10 cijfers, optioneel landcode).');
-
+    if (!first_name) errors.push('First name is required.');
+    if (!last_name) errors.push('Last name is required.');
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.push('Please enter a valid email address.');
+    if (!address) errors.push('Address is required.');
+    if (!city) errors.push('City is required.');
+    if (!district) errors.push('District is required.');
+    if (!country) errors.push('Country is required.');
+    if (!phone || !/^(\+?\d{1,3}[- ]?)?\d{10}$/.test(phone)) errors.push('Please enter a valid phone number (10 digits, optional country code).');
+    
     return errors;
 }
 
