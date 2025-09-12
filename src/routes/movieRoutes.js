@@ -8,6 +8,8 @@ router.get('/', authMiddleware, movieController.getAllMovies);
 router.get('/create', authMiddleware, movieController.renderCreateMovieForm);
 
 router.post('/create', authMiddleware, movieValidation.createValidation, movieController.createMovie);
+router.post('/:id/delete', authMiddleware, movieController.deleteMovie);
+
 router.get('/:id', authMiddleware, movieController.getMovieById);
 
 module.exports = router;    

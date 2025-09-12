@@ -148,6 +148,69 @@ const movieDao = {
         });
 
     },
+    deleteMovie(filmId, callback) {
+        db.query('START TRANSACTION', (err) => {
+            if (err) return callback(err);
+
+            // 1. Delete payments related to rentals of the film
+            const deletePaymentsSql = `
+                DELETE p
+                FROM payment p
+                JOIN rental r ON p.rental_id = r.rental_id
+                JOIN inventory i ON r.inventory_id = i.inventory_id
+                WHERE i.film_id = ?
+            `;
+            db.query(deletePaymentsSql, [filmId], (err) => {
+                if (err) return rollback(callback, err);
+
+                // 2. Delete rentals related to the film
+                const deleteRentalsSql = `
+                    DELETE r
+                    FROM rental r
+                    JOIN inventory i ON r.inventory_id = i.inventory_id
+                    WHERE i.film_id = ?
+                `;
+                db.query(deleteRentalsSql, [filmId], (err) => {
+                    if (err) return rollback(callback, err);
+
+                    // 3. Delete inventory related to the film
+                    const deleteInventorySql = `
+                        DELETE FROM inventory
+                        WHERE film_id = ?
+                    `;
+                    db.query(deleteInventorySql, [filmId], (err) => {
+                        if (err) return rollback(callback, err);
+
+                        // 4. Delete film_category relationships
+                        const deleteFilmCategorySql = `
+                            DELETE FROM film_category
+                            WHERE film_id = ?
+                        `;
+                        db.query(deleteFilmCategorySql, [filmId], (err) => {
+                            if (err) return rollback(callback, err);
+
+                            // 5. Delete the film itself
+                            const deleteFilmSql = `
+                                DELETE FROM film
+                                WHERE film_id = ?
+                            `;
+                            db.query(deleteFilmSql, [filmId], (err) => {
+                                if (err) return rollback(callback, err);
+
+                                // Commit transaction
+                                db.query('COMMIT', (err) => {
+                                    if (err) return rollback(callback, err);
+
+                                    callback(null, { success: true, deletedFilmId: filmId });
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+        });
+    }
+
 }
 
 

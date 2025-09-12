@@ -9,6 +9,9 @@ const movieService = {
     },
     createMovie(movieData, callback) {
         movieDao.createMovie(movieData, callback);
+    },
+    deleteMovie(film_id, callback) {
+        movieDao.deleteMovie(film_id, callback);
     }
 };
 

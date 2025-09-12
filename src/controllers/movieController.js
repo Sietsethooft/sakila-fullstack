@@ -9,6 +9,7 @@ const formatDate = require('../utils/formatDate');
 const movieController = {
     getAllMovies (req, res) {
         const { search, language, category, rating } = req.query;
+        const success = req.query.success || null;
 
         movieService.getMovies({ search, language, category, rating }, (error, movies) => {
             if (error) {
@@ -43,7 +44,7 @@ const movieController = {
                             });
                         }
                     logger.debug(`Movies retrieved successfully: ${movies.length} found`);
-                    res.render('pages/movieManagement/movieIndex', { movies, languages, categories, ratings });
+                    res.render('pages/movieManagement/movieIndex', { movies, languages, categories, ratings, success: success});
                     });
                 });
             });
@@ -51,6 +52,8 @@ const movieController = {
     },
     getMovieById (req, res) {
         const film_id = req.params.id;
+        const success = req.query.success || null;
+        const errorMessage = req.query.error || null;
         movieService.getMovieById(film_id, (error, movie) => {
             if (error) {
                 logger.error(`Error retrieving movie: ${error.message}`);
@@ -99,7 +102,7 @@ const movieController = {
                             if (rental.return_by) rental.return_by = formatDate(rental.return_by);
                         });
                     }
-                    res.render('pages/movieManagement/movieDetail', { movie, rentalHistory, activeRentals });
+                    res.render('pages/movieManagement/movieDetail', { movie, rentalHistory, activeRentals, success: success, error: errorMessage });
                 });
             });
         });
@@ -146,7 +149,36 @@ const movieController = {
             logger.info(`Movie created successfully: ${movie.title}`);
             res.redirect('/movieManagement');
         });
-    }
+    },
+    deleteMovie(req, res) {
+        const film_id = req.params.id;
+        logger.debug(`Attempting to delete movie: ID ${film_id}`);
+        rentalService.getActiveRentalsByFilmId(film_id, (err, activeRentals) => { // Check for active rentals
+            if (err) {
+                logger.error(`Error checking active rentals for movie ID ${film_id}: ${err.message}`);
+                return res.status(500).render('pages/error', {
+                    message: 'Error checking outstanding rentals',
+                    error: { status: 500, stack: err.stack }
+                });
+            } else if (activeRentals && activeRentals.length > 0) {
+                logger.warn(`Cannot delete movie ID ${film_id}: active rentals exist`);
+                return res.redirect(`/movieManagement/${film_id}?error=There are still outstanding rentals.`);
+            } else {
+                movieService.deleteMovie(film_id, (deleteErr) => {
+                    if (deleteErr) {
+                        logger.error(`Error deleting movie ID ${film_id}: ${deleteErr.message}`);
+                        return res.status(500).render('pages/error', {
+                            message: 'Error deleting movie',
+                            error: { status: 500, stack: deleteErr.stack }
+                        });
+                    } else {
+                        logger.debug(`Movie deleted: ID ${film_id}`);
+                        return res.redirect('/movieManagement?success=3');
+                    }
+                });
+            }
+        });
+    },
 };
 
 module.exports = movieController;
