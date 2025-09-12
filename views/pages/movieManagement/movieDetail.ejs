@@ -30,14 +30,18 @@
             <th>Taal</th>
             <td><%= movie.language_name %></td>
         </tr>
+        <% if (movie.release_year) { %>
         <tr>
             <th>Jaar</th>
             <td><%= movie.release_year %></td>
         </tr>
+        <% } %>
+        <% if (movie.length) { %>
         <tr>
             <th>Duur</th>
             <td><%= movie.length %> minuten</td>
         </tr>
+        <% } %>
         <tr>
             <th>Rating</th>
             <td><%= movie.rating %></td>
@@ -63,8 +67,8 @@
         </tr>
         </table>
     </div>
-    <div class="col-md-4 mt-3 align-items-center justify-content-center">
-      <img src="https://picsum.photos/480/320?random=1" class="img-fluid rounded shadow movie-img-large" alt="The Matrix">
+    <div class="col-md-4 <%= (movie.length || movie.release_year) ? 'mt-3' : '' %> align-items-center justify-content-center">
+        <img src="https://picsum.photos/480/320?random=1" class="img-fluid rounded shadow movie-img-large" alt="The Matrix">
     </div>
   </div>
 
