@@ -146,9 +146,10 @@ const clientController = {
             clientServices.createClient({first_name, last_name, email, address, city, district, country, postal_code, phone, storeId}, (err, result) => {
                 if (err) {
                     logger.error(`Error creating client: ${err.message}`);
-                    return res.status(500).render('pages/error', {
-                        message: 'Error creating client',
-                        error: { status: 500, stack: err.stack }
+                    // Render the form again with errors and old input
+                    return res.status(400).render('pages/clientManagement/clientCreate', {
+                        errors: [err.message], // or an array of validation errors
+                        old: { first_name, last_name, email, address, city, district, country, postal_code, phone }
                     });
                 }
                 logger.debug(`Client created: ID ${result.customer_id}, Name: ${first_name} ${last_name}`);
