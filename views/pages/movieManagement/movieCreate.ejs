@@ -1,6 +1,6 @@
 <section class="client-card">
 
-    <h2 class="mb-4">Film aanmaken</h2>
+    <h2 class="mb-4">Create Movie</h2>
 
     <% if (typeof errors !== 'undefined' && errors.length > 0) { %>
         <div class="alert alert-danger">
@@ -14,48 +14,48 @@
 
     <form id="create-movie-form" action="/movieManagement/create" method="POST" novalidate>
     <div class="mb-3">
-        <label for="title" class="form-label fw-bold">Titel *</label>
+        <label for="title" class="form-label fw-bold">Title *</label>
         <input type="text" class="form-control input-field-focus" id="title" name="title" required>
-        <div class="invalid-feedback">Titel is verplicht.</div>
+        <div class="invalid-feedback">Title is required.</div>
     </div>
     <div class="mb-3">
-        <label for="description" class="form-label fw-bold">Beschrijving *</label>
+        <label for="description" class="form-label fw-bold">Description *</label>
         <textarea class="form-control input-field-focus rounded" id="description" name="description" rows="4" required></textarea>
-        <div class="invalid-feedback">Beschrijving is verplicht.</div>
+        <div class="invalid-feedback">Description is required.</div>
     </div>
     <div class="row g-3 mb-3">
         <div class="col-md-6">
             <div class="input-card p-3 shadow-sm rounded">
-                <label for="release_year" class="form-label fw-bold">Jaar</label>
+                <label for="release_year" class="form-label fw-bold">Year</label>
                 <input type="number" class="form-control input-field-focus" id="release_year" name="release_year" min="1900" max="2099">
             </div>
         </div>
         <div class="col-md-6">
             <div class="input-card p-3 shadow-sm rounded">
-                <label for="language" class="form-label fw-bold">Taal *</label>
+                <label for="language" class="form-label fw-bold">Language *</label>
                 <input type="text" class="form-control input-field-focus" id="language" name="language_name" required>
-                <div class="invalid-feedback">Taal is verplicht.</div>
+                <div class="invalid-feedback">Language is required.</div>
             </div>
         </div>
     </div>
     <div class="row g-3 mb-3">
         <div class="col-md-6">
             <div class="input-card p-3 shadow-sm rounded">
-                <label for="category" class="form-label fw-bold">Categorie *</label>
+                <label for="category" class="form-label fw-bold">Category *</label>
                 <select class="form-control input-field-focus" id="category" name="category_id" required>
-                    <option value="">Selecteer categorie</option>
+                    <option value="">Select category</option>
                     <% categories.forEach(function(category) { %>
                         <option value="<%= category.category_id %>"><%= category.name %></option>
                     <% }); %>
                 </select>
-                <div class="invalid-feedback">Categorie is verplicht.</div>
+                <div class="invalid-feedback">Category is required.</div>
             </div>
         </div>
         <div class="col-md-6">
             <div class="input-card p-3 shadow-sm rounded">
                 <label for="rating" class="form-label fw-bold">Rating *</label>
                 <select class="form-control input-field-focus" id="rating" name="rating" required>
-                    <option value="">Selecteer rating</option>
+                    <option value="">Select rating</option>
                     <% ratings.forEach(function(rating) { %>
                         <option value="<%= rating %>"><%= rating %></option>
                     <% }); %>
@@ -66,34 +66,34 @@
     <div class="row g-3 mb-3">
         <div class="col-md-6">
             <div class="input-card p-3 shadow-sm rounded">
-                <label for="rental_duration" class="form-label fw-bold">Verhuurduur (dagen) *</label>
+                <label for="rental_duration" class="form-label fw-bold">Rental duration (days) *</label>
                 <input type="number" class="form-control input-field-focus" id="rental_duration" name="rental_duration" required min="1">
-                <div class="invalid-feedback">Verhuurduur is verplicht.</div>
+                <div class="invalid-feedback">Rental duration is required.</div>
             </div>
         </div>
         <div class="col-md-6">
             <div class="input-card p-3 shadow-sm rounded">
-                <label for="rental_rate" class="form-label fw-bold">Verhuurprijs (€) *</label>
+                <label for="rental_rate" class="form-label fw-bold">Rental price (€) *</label>
                 <input type="number" step="0.01" class="form-control input-field-focus" id="rental_rate" name="rental_rate" required min="0">
-                <div class="invalid-feedback">Verhuurprijs is verplicht.</div>
+                <div class="invalid-feedback">Rental price is required.</div>
             </div>
         </div>
     </div>
     <div class="row g-3 mb-3">
         <div class="col-md-6">
             <div class="input-card p-3 shadow-sm rounded">
-                <label for="length" class="form-label fw-bold">Duur (minuten)</label>
+                <label for="length" class="form-label fw-bold">Length (minutes)</label>
                 <input type="number" class="form-control input-field-focus" id="length" name="length" min="1">
             </div>
         </div>
         <div class="col-md-6">
             <div class="input-card p-3 shadow-sm rounded">
-                <label for="inventory" class="form-label fw-bold">Aantal exemplaren *</label>
+                <label for="inventory" class="form-label fw-bold">Number of copies *</label>
                 <input type="number" class="form-control input-field-focus" id="inventory" name="inventory" required min="1">
-                <div class="invalid-feedback">Aantal exemplaren is verplicht.</div>
+                <div class="invalid-feedback">Number of copies is required.</div>
             </div>
         </div>
     </div>
-    <button type="submit" class="btn btn-primary px-4">Opslaan</button>
+    <button type="submit" class="btn btn-primary px-4">Save</button>
 </form>
 </section>

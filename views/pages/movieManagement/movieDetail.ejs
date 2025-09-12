@@ -3,11 +3,11 @@
         <h2><%= movie.title %></h2>
         <div class="mb-1">
             <a href="/clientManagement//edit" class="btn btn-warning me-2">
-                <i class="fas fa-edit"></i> Bewerken
+                <i class="fas fa-edit"></i> Edit
             </a>
             <form id="delete-client-form" action="/clientManagement//delete" method="POST" style="display:inline;">
                 <button type="button" class="btn btn-danger" id="delete-client-btn">
-                    <i class="fas fa-trash-alt"></i> Verwijderen
+                    <i class="fas fa-trash-alt"></i> Delete
                 </button>
             </form>           
         </div>
@@ -23,23 +23,23 @@
             <col style="width:65%">
         </colgroup>
         <tr>
-            <th>Categorie</th>
+            <th>Category</th>
             <td><%= movie.category_name %></td>
         </tr>
         <tr>
-            <th>Taal</th>
+            <th>Language</th>
             <td><%= movie.language_name %></td>
         </tr>
         <% if (movie.release_year) { %>
         <tr>
-            <th>Jaar</th>
+            <th>Year</th>
             <td><%= movie.release_year %></td>
         </tr>
         <% } %>
         <% if (movie.length) { %>
         <tr>
-            <th>Duur</th>
-            <td><%= movie.length %> minuten</td>
+            <th>Length</th>
+            <td><%= movie.length %> minutes</td>
         </tr>
         <% } %>
         <tr>
@@ -47,7 +47,7 @@
             <td><%= movie.rating %></td>
         </tr>
         <tr>
-            <th>Laatste update</th>
+            <th>Last update</th>
             <td><%= movie.last_update %></td>
         </tr>
         </table>
@@ -58,12 +58,12 @@
             <col style="width:65%">
         </colgroup>
         <tr>
-            <th>Verhuurprijs</th>
+            <th>Rental price</th>
             <td>€ <%= movie.rental_rate %></td>
         </tr>
         <tr>
-            <th>Beschikbaar</th>
-            <td><%= movie.total_available %> van <%= movie.total_inventory %></td>
+            <th>Available</th>
+            <td><%= movie.total_available %> of <%= movie.total_inventory %></td>
         </tr>
         </table>
     </div>
@@ -72,14 +72,14 @@
     </div>
   </div>
 
-<h3>Openstaande Verhuren</h3>
+<h3>Outstanding Rentals</h3>
 <table class="table-800 table table-bordered">
   <thead>
     <tr>
-      <th>Klant</th>
-      <th>Verhuurd op</th>
-      <th>Te retourneren voor</th>
-      <th>Prijs</th>
+      <th>Customer</th>
+      <th>Rented on</th>
+      <th>Return by</th>
+      <th>Price</th>
     </tr>
   </thead>
   <tbody>
@@ -94,20 +94,20 @@
       <% }); %>
     <% } else { %>
       <tr>
-        <td colspan="4" class="text-center">Geen openstaande verhuren</td>
+        <td colspan="4" class="text-center">No outstanding rentals found</td>
       </tr>
     <% } %>
   </tbody>
 </table>
 
-<h3>Verhuurgeschiedenis</h3>
+<h3>Rental History</h3>
 <table class="table-800 table table-bordered">
   <thead>
     <tr>
-      <th>Klant</th>
-      <th>Verhuurd op</th>
-      <th>Teruggebracht op</th>
-      <th>Prijs</th>
+      <th>Customer</th>
+      <th>Rented on</th>
+      <th>Returned on</th>
+      <th>Price</th>
     </tr>
   </thead>
   <tbody>
@@ -122,7 +122,7 @@
       <% }); %>
     <% } else { %>
       <tr>
-        <td colspan="4" class="text-center">Geen verhuurgeschiedenis</td>
+        <td colspan="4" class="text-center">No rental history found</td>
       </tr>
     <% } %>
   </tbody>
