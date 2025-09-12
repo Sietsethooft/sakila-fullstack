@@ -60,6 +60,7 @@
                         <option value="<%= rating %>"><%= rating %></option>
                     <% }); %>
                 </select>
+                <div class="invalid-feedback">Rating is required.</div>
             </div>
         </div>
     </div>
@@ -97,3 +98,14 @@
     <button type="submit" class="btn btn-primary px-4">Save</button>
 </form>
 </section>
+
+<script>
+    document.getElementById('create-movie-form').addEventListener('submit', function(event) {
+        const form = event.target;
+        if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+    });
+</script>

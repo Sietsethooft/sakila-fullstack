@@ -3,11 +3,11 @@ document.addEventListener('DOMContentLoaded', function() {
   if (deleteBtn) {
     deleteBtn.addEventListener('click', function(e) {
       Swal.fire({
-        title: 'Weet je zeker dat je deze klant wilt verwijderen?',
+        title: 'Are you sure you want to delete this client?',
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonText: 'Ja, verwijderen',
-        cancelButtonText: 'Annuleren',
+        confirmButtonText: 'Yes, delete',
+        cancelButtonText: 'Cancel',
         confirmButtonColor: '#d33',
       }).then((result) => {
         if (result.isConfirmed) {

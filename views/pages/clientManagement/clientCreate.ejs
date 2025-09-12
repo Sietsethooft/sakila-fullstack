@@ -1,5 +1,5 @@
 <section class="client-card">
-    <script src="/js/clientCreate.js"></script>
+
 
     <h2 class="mb-4">Klant aanmaken</h2>
 
@@ -67,3 +67,14 @@
         <button type="submit" class="btn btn-primary">Save</button>
     </form>
 </section>
+
+<script>
+    document.getElementById('create-client-form').addEventListener('submit', function(event) {
+    const form = event.target;
+    if (!form.checkValidity()) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+    form.classList.add('was-validated');
+});
+</script>
