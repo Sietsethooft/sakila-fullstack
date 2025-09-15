@@ -139,8 +139,6 @@ const movieController = {
             language_name = language_name.charAt(0).toUpperCase() + language_name.slice(1).toLowerCase();
         }
 
-        logger.debug(`staff_id from JWT: ${staff_id}`);
-
         staffServices.getStoreIdByStaffId(staff_id, (err, storeId) => {
             if (err) {
                 logger.error(`Error fetching store_id for staff_id ${staff_id}: ${err.message}`);
@@ -148,9 +146,7 @@ const movieController = {
                     message: 'Error retrieving store_id',
                     error: { status: 500, stack: err.stack }
                 }); 
-            }
-
-            logger.debug(`store_id for staff_id ${staff_id} is ${storeId}`);
+            }   
 
             movieService.createMovie({ title, description, release_year, language_name, category_id, rating, rental_duration, rental_rate, length, inventory, storeId }, (error, movie) => {
                 if (error) {

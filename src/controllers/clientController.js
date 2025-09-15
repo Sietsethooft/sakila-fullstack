@@ -130,7 +130,6 @@ const clientController = {
     createClient(req, res) {
         const { first_name, last_name, email, address, city, district, country, postal_code, phone } = req.body;
         const staff_id = res.locals.user ? res.locals.user.id : undefined;
-        logger.debug(`staff_id from JWT: ${staff_id}`);
 
         staffServices.getStoreIdByStaffId(staff_id, (err, storeId) => {
             if (err) {
@@ -140,8 +139,6 @@ const clientController = {
                     error: { status: 500, stack: err.stack }
                 }); 
             }
-
-            logger.debug(`Store ID ${storeId} fetched for staff ID ${staff_id}`);
 
             clientServices.createClient({first_name, last_name, email, address, city, district, country, postal_code, phone, storeId}, (err, result) => {
                 if (err) {
