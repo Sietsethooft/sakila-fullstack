@@ -1,0 +1,73 @@
+<section class="client-card">
+  <h2 class="h2-head">Rental-management</h2>
+<div class="d-flex mb-3 flex-wrap">
+    <button class="btn btn-primary" type="button" id="add-movie-btn" style="margin-right: 10px;">
+      <i class="fas fa-film me-2"></i> Create rental
+    </button>
+    <button class="btn btn-return btn-warning" type="button" id="return-movie-btn">
+      <i class="fas fa-film me-2"></i> Return rental
+    </button>
+</div>
+
+  <h3>Overdue Rentals</h3>
+  <table class="table-800 table table-bordered">
+    <thead>
+        <tr>
+        <th>Customer</th>
+        <th>Film</th>
+        <th>Rented on</th>
+        <th>Return by</th>
+        <th>Price</th>
+        <th>Fine</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% if (overdueRentals && overdueRentals.length > 0) { %>
+        <% overdueRentals.forEach(function(rental) { %>
+            <tr>
+            <td><%= rental.customer_name %></td>
+            <td><%= rental.title %></td>
+            <td><%= rental.rental_date %></td>
+            <td><%= rental.due_date %></td>
+            <td>€ <%= rental.expected_amount %></td>
+            <td>+ € <%= rental.fine_amount %></td>
+            </tr>
+        <% }); %>
+        <% } else { %>
+        <tr>
+            <td colspan="5" class="text-center">No overdue rentals found</td>
+        </tr>
+        <% } %>
+    </tbody>
+    </table>
+
+  <h3>Open rentals</h3>
+  <table class="table-800 table table-bordered">
+    <thead>
+      <tr>
+        <th>Customer</th>
+        <th>Film</th>
+        <th>Rented on</th>
+        <th>Return by</th>
+        <th>Price</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (openRentals && openRentals.length > 0) { %>
+        <% openRentals.forEach(function(rental) { %>
+          <tr>
+            <td><%= rental.customer_name %></td>
+            <td><%= rental.title %></td>
+            <td><%= rental.rental_date %></td>
+            <td><%= rental.return_by %></td>
+            <td>€ <%= rental.amount %></td>
+          </tr>
+        <% }); %>
+      <% } else { %>
+        <tr>
+          <td colspan="5" class="text-center">No open rentals found</td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+</section>

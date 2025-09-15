@@ -12,6 +12,12 @@ const rentalService = {
     },
     getActiveRentalsByFilmId(film_id, callback) {
         rentalDao.getActiveRentalsByFilmId(film_id, callback);
+    },
+    getAllOpenRentals(callback) {
+        rentalDao.getAllOpenRentals(callback);
+    },
+    getAllOverdueRentals(callback) {
+        rentalDao.getAllOverdueRentals(callback);
     }
 };
 

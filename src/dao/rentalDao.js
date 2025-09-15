@@ -55,6 +55,47 @@ const rentalDao = {
             WHERE f.film_id = ? AND r.return_date IS NULL;
         `;
         db.query(query, [film_id], callback);
-    }
+    },
+
+    getAllOpenRentals(callback) {
+        const query = `
+            SELECT 
+                CONCAT(c.first_name, ' ', c.last_name) AS customer_name,
+                f.title,
+                r.rental_date,
+                DATE_ADD(r.rental_date, INTERVAL f.rental_duration DAY) AS return_by,
+                p.amount
+            FROM rental r
+            JOIN customer c ON r.customer_id = c.customer_id
+            JOIN inventory i ON r.inventory_id = i.inventory_id
+            JOIN film f ON i.film_id = f.film_id
+            JOIN payment p ON p.rental_id = r.rental_id
+            WHERE r.return_date IS NULL
+            AND NOW() <= DATE_ADD(r.rental_date, INTERVAL f.rental_duration DAY)
+            ORDER BY r.rental_date DESC
+        `;
+        db.query(query, callback);
+    },
+
+
+    getAllOverdueRentals(callback) {
+        const query = `
+            SELECT 
+                CONCAT(c.first_name, ' ', c.last_name) AS customer_name,
+                f.title,
+                r.rental_date,
+                DATE_ADD(r.rental_date, INTERVAL f.rental_duration DAY) AS due_date,
+                f.rental_rate AS expected_amount,
+                ROUND(DATEDIFF(NOW(), DATE_ADD(r.rental_date, INTERVAL f.rental_duration DAY)) * 0.10, 2) AS fine_amount
+            FROM rental r
+            JOIN customer c ON r.customer_id = c.customer_id
+            JOIN inventory i ON r.inventory_id = i.inventory_id
+            JOIN film f ON i.film_id = f.film_id
+            WHERE r.return_date IS NULL
+            AND NOW() > DATE_ADD(r.rental_date, INTERVAL f.rental_duration DAY);
+        `;
+        db.query(query, callback);
+    },
+
 };
 module.exports = rentalDao;

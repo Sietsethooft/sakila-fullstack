@@ -10,6 +10,7 @@ const aboutRouter = require('./src/routes/aboutRoutes');
 const clientRouter = require('./src/routes/clientRoutes');
 const authRouter = require('./src/routes/authRoutes');
 const movieRouter = require('./src/routes/movieRoutes');
+const rentalRouter = require('./src/routes/rentalRoutes');
 
 const app = express();
 
@@ -71,6 +72,7 @@ app.use('/dashboard', dashboardRouter);
 app.use('/about', aboutRouter);
 app.use('/clientManagement', clientRouter);
 app.use('/movieManagement', movieRouter);
+app.use('/rentalManagement', rentalRouter);
 
 // Catch 404 and forward to error handler
 app.use(function(req, res, next) {
