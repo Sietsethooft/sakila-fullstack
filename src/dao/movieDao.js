@@ -75,7 +75,7 @@ const movieDao = {
         const { 
             title, description, release_year, language_name, 
             category_id, rating, rental_duration, rental_rate, 
-            length, inventory 
+            length, inventory, storeId 
         } = movieData;
 
         db.query('START TRANSACTION', (err) => {
@@ -88,10 +88,10 @@ const movieDao = {
 
                 const insertLanguageIfNeeded = (cb) => {
                     if (results.length > 0) {
-                        // language bestaat al
+                        // language already exists
                         return cb(null, results[0].language_id);
                     } else {
-                        // language bestaat niet → nieuwe invoegen
+                        // language does not exist → insert new one
                         const insertLangSql = `INSERT INTO language (name) VALUES (?)`;
                         db.query(insertLangSql, [language_name], (err, result) => {
                             if (err) return rollback(callback, err);
@@ -127,7 +127,6 @@ const movieDao = {
                             if (err) return rollback(callback, err);
 
                             // 4. Insert inventory copies
-                            const storeId = 1; // hardcoded
                             const values = Array.from({ length: inventory }, () => [film_id, storeId, new Date()]);
 
                             const inventorySql = `

@@ -3,6 +3,7 @@ const languageService = require('../services/languageServices');
 const categoryService = require('../services/categoryServices');
 const ratingService = require('../services/ratingServices');
 const rentalService = require('../services/rentalServices');
+const staffServices = require('../services/staffServices');
 const logger = require('../utils/logger');
 const formatDate = require('../utils/formatDate');
 
@@ -131,23 +132,37 @@ const movieController = {
     },
     createMovie (req, res) {
         let { title, description, release_year, language_name, category_id, rating, rental_duration, rental_rate, length, inventory } = req.body;
+        const staff_id = res.locals.user ? res.locals.user.id : undefined;
 
         // Normalize language_name: first letter uppercase, rest lowercase
         if (language_name) {
             language_name = language_name.charAt(0).toUpperCase() + language_name.slice(1).toLowerCase();
         }
 
-        logger.debug(`Creating movie with data: title=${title}, description=${description}, release_year=${release_year}, language_name=${language_name}, category_id=${category_id}, rating=${rating}, rental_duration=${rental_duration}, rental_rate=${rental_rate}, length=${length}, inventory=${inventory}`);
-        movieService.createMovie({ title, description, release_year, language_name, category_id, rating, rental_duration, rental_rate, length, inventory }, (error, movie) => {
-            if (error) {
-                logger.error(`Error creating movie: ${error.message}`);
-                return res.status(500).render('pages/error', { 
-                    message: 'Error creating movie', 
-                    error: { status: 500, stack: error.stack } 
-                });
+        logger.debug(`staff_id from JWT: ${staff_id}`);
+
+        staffServices.getStoreIdByStaffId(staff_id, (err, storeId) => {
+            if (err) {
+                logger.error(`Error fetching store_id for staff_id ${staff_id}: ${err.message}`);
+                return res.status(500).render('pages/error', {
+                    message: 'Error retrieving store_id',
+                    error: { status: 500, stack: err.stack }
+                }); 
             }
-            logger.info(`Movie created successfully: ${movie.title} with ID ${movie.film_id}`);
-            res.redirect(`/movieManagement/${movie.film_id}?success=1`);
+
+            logger.debug(`store_id for staff_id ${staff_id} is ${storeId}`);
+
+            movieService.createMovie({ title, description, release_year, language_name, category_id, rating, rental_duration, rental_rate, length, inventory, storeId }, (error, movie) => {
+                if (error) {
+                    logger.error(`Error creating movie: ${error.message}`);
+                    return res.status(500).render('pages/error', { 
+                        message: 'Error creating movie', 
+                        error: { status: 500, stack: error.stack } 
+                    });
+                }
+                logger.info(`Movie created successfully: ${movie.title} with ID ${movie.film_id}`);
+                res.redirect(`/movieManagement/${movie.film_id}?success=1`);
+            });
         });
     },
     deleteMovie(req, res) {
