@@ -15,6 +15,9 @@ const movieService = {
     },
     updateMovie(film_id, movieData, callback) {
         movieDao.updateMovie(film_id, movieData, callback);
+    },
+    getMovieAvailabilities(callback) {
+        movieDao.getMovieAvailabilities(callback);
     }
 };
 

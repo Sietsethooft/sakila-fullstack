@@ -77,7 +77,6 @@ const rentalDao = {
         db.query(query, callback);
     },
 
-
     getAllOverdueRentals(callback) {
         const query = `
             SELECT 

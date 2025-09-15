@@ -1,48 +1,21 @@
 <section class="client-card">
   <h2 class="h2-head">Rental-management</h2>
-<div class="d-flex mb-3 flex-wrap">
+  <div class="d-flex mb-3 flex-wrap">
     <button class="btn btn-primary" type="button" id="add-movie-btn" style="margin-right: 10px;">
       <i class="fas fa-film me-2"></i> Create rental
     </button>
-    <button class="btn btn-return btn-warning" type="button" id="return-movie-btn">
-      <i class="fas fa-film me-2"></i> Return rental
-    </button>
-</div>
+  </div>
 
   <h3>Overdue Rentals</h3>
   <table class="table-800 table table-bordered">
-    <thead>
-        <tr>
-        <th>Customer</th>
-        <th>Film</th>
-        <th>Rented on</th>
-        <th>Return by</th>
-        <th>Price</th>
-        <th>Fine</th>
-        </tr>
-    </thead>
-    <tbody>
-        <% if (overdueRentals && overdueRentals.length > 0) { %>
-        <% overdueRentals.forEach(function(rental) { %>
-            <tr>
-            <td><%= rental.customer_name %></td>
-            <td><%= rental.title %></td>
-            <td><%= rental.rental_date %></td>
-            <td><%= rental.due_date %></td>
-            <td>€ <%= rental.expected_amount %></td>
-            <td>+ € <%= rental.fine_amount %></td>
-            </tr>
-        <% }); %>
-        <% } else { %>
-        <tr>
-            <td colspan="5" class="text-center">No overdue rentals found</td>
-        </tr>
-        <% } %>
-    </tbody>
-    </table>
-
-  <h3>Open rentals</h3>
-  <table class="table-800 table table-bordered">
+    <colgroup>
+      <col style="width: 25%;">
+      <col style="width: 30%;">
+      <col style="width: 12.5%;">
+      <col style="width: 12.5%;">
+      <col style="width: 10%;">
+      <col style="width: 15%;">
+      <col style="width: 5%;">
     <thead>
       <tr>
         <th>Customer</th>
@@ -50,6 +23,56 @@
         <th>Rented on</th>
         <th>Return by</th>
         <th>Price</th>
+        <th>Fine</th>
+        <th class="text-center"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (overdueRentals && overdueRentals.length > 0) { %>
+        <% overdueRentals.forEach(function(rental) { %>
+          <tr>
+            <td><%= rental.customer_name %></td>
+            <td><%= rental.title %></td>
+            <td><%= rental.rental_date %></td>
+            <td><%= rental.due_date %></td>
+            <td>€ <%= rental.expected_amount %></td>
+            <td>+ € <%= rental.fine_amount %></td>
+            <td class="text-center">
+            <button
+                type="button"
+                class="btn btn-sm btn-outline-success delete-rental"
+                data-id="<%= rental.rental_id %>"
+                title="Mark rental as returned"
+                aria-label="Mark rental as returned"
+            >✓</button>
+            </td>
+          </tr>
+        <% }); %>
+      <% } else { %>
+        <tr>
+          <td colspan="7" class="text-center">No overdue rentals found</td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+
+  <h3>Open rentals</h3>
+  <table class="table-800 table table-bordered">
+    <colgroup>
+      <col style="width: 25%;">
+      <col style="width: 30%;">
+      <col style="width: 15%;">
+      <col style="width: 15%;">
+      <col style="width: 10%;">
+      <col style="width: 5%;">
+    <thead>
+      <tr>
+        <th>Customer</th>
+        <th>Film</th>
+        <th>Rented on</th>
+        <th>Return by</th>
+        <th>Price</th>
+        <th class="text-center"></th>
       </tr>
     </thead>
     <tbody>
@@ -61,13 +84,48 @@
             <td><%= rental.rental_date %></td>
             <td><%= rental.return_by %></td>
             <td>€ <%= rental.amount %></td>
+            <td class="text-center">
+            <button
+                type="button"
+                class="btn btn-sm btn-outline-success delete-rental"
+                data-id="<%= rental.rental_id %>"
+                title="Mark rental as returned"
+                aria-label="Mark rental as returned"
+            >✓</button>
+            </td>
           </tr>
         <% }); %>
       <% } else { %>
         <tr>
-          <td colspan="5" class="text-center">No open rentals found</td>
+          <td colspan="6" class="text-center">No open rentals found</td>
         </tr>
       <% } %>
     </tbody>
   </table>
 </section>
+
+<script>
+    document.getElementById('add-movie-btn')?.addEventListener('click', () => {
+        window.location.href = '/rentalManagement/create';
+    });
+
+  document.addEventListener('click', function (e) {
+    const btn = e.target.closest('.delete-rental');
+    if (!btn) return;
+
+    const id = btn.dataset.id;
+    if (!id) {
+      alert('Geen rental ID gevonden op de rij.');
+      return;
+    }
+
+    if (!confirm('Deze rental verwijderen?')) return;
+
+    fetch(`/rentalManagement/${id}`, { method: 'DELETE' })
+      .then(res => {
+        if (!res.ok) throw new Error('Delete failed');
+        location.reload();
+      })
+      .catch(() => alert('Verwijderen mislukt.'));
+  });
+</script>

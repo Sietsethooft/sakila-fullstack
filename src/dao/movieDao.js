@@ -58,7 +58,7 @@ const movieDao = {
             JOIN inventory i ON f.film_id = i.film_id
             LEFT JOIN rental r 
                 ON i.inventory_id = r.inventory_id 
-                AND r.return_date IS NULL   -- enkel openstaande rentals
+                AND r.return_date IS NULL   
             WHERE f.film_id = ?
             GROUP BY 
                 f.film_id, f.title, f.description, f.release_year, 
@@ -342,6 +342,28 @@ const movieDao = {
                 callback(null, { success: true, updatedFilmId: film_id });
             });
         }
+    },
+    getMovieAvailabilities(callback){
+        const query = `
+            SELECT 
+                f.film_id,
+                f.title,
+                CASE 
+                    WHEN SUM(CASE WHEN r.rental_id IS NULL OR r.return_date IS NOT NULL THEN 1 ELSE 0 END) > 0 
+                    THEN 1 ELSE 0 
+                END AS available
+            FROM film f
+            JOIN inventory i ON f.film_id = i.film_id
+            LEFT JOIN rental r 
+                ON i.inventory_id = r.inventory_id 
+                AND r.return_date IS NULL
+            GROUP BY f.film_id, f.title;
+        `;
+        
+        db.query(query, (err, results) => {
+            if (err) return callback(err);
+            callback(null, results);
+        });
     }
 
 }

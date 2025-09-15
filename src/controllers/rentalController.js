@@ -1,6 +1,8 @@
 const rentalServices = require('../services/rentalServices');
+const movieServices = require('../services/movieServices');
 const logger = require('../utils/logger');
 const formatDate  = require('../utils/formatDate');
+const { getMovies } = require('../dao/movieDao');
 
 const rentalController = {
     getAllRentals(req, res) {
@@ -43,6 +45,20 @@ const rentalController = {
                     openRentals: openRentals,
                     overdueRentals: overdueRentals
                 });
+            });
+        });
+    },
+    getCreateRentalForm(req, res) {
+        movieServices.getMovieAvailabilities((err, movies) => {
+            if (err) {
+                logger.error(`Error retrieving movies for rental creation: ${err.message}`);
+                return res.status(500).render('pages/error', {
+                    message: 'Error retrieving movies for rental creation',
+                    error: { status: 500, stack: err.stack }
+                });
+            }
+            res.render('pages/rentalManagement/rentalCreate', {
+                movies: movies
             });
         });
     }
