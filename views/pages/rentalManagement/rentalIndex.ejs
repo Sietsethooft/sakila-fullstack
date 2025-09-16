@@ -24,7 +24,7 @@
         <th>Return by</th>
         <th>Price</th>
         <th>Fine</th>
-        <th class="text-center"></th>
+        <th class="text-center">Returned?</th>
       </tr>
     </thead>
     <tbody>
@@ -40,7 +40,7 @@
             <td class="text-center">
             <button
                 type="button"
-                class="btn btn-sm btn-outline-success delete-rental"
+                class="btn btn-sm btn-outline-success return-rental"
                 data-id="<%= rental.rental_id %>"
                 title="Mark rental as returned"
                 aria-label="Mark rental as returned"
@@ -87,7 +87,7 @@
             <td class="text-center">
             <button
                 type="button"
-                class="btn btn-sm btn-outline-success delete-rental"
+                class="btn btn-sm btn-outline-success return-rental"
                 data-id="<%= rental.rental_id %>"
                 title="Mark rental as returned"
                 aria-label="Mark rental as returned"
@@ -104,28 +104,9 @@
   </table>
 </section>
 
-<script>
-    document.getElementById('add-movie-btn')?.addEventListener('click', () => {
-        window.location.href = '/rentalManagement/create';
-    });
+<!-- Hidden form to make a POST request -->
+<form id="close-rental-form" method="POST" style="display:none;">
+</form>
 
-  document.addEventListener('click', function (e) {
-    const btn = e.target.closest('.delete-rental');
-    if (!btn) return;
-
-    const id = btn.dataset.id;
-    if (!id) {
-      alert('Geen rental ID gevonden op de rij.');
-      return;
-    }
-
-    if (!confirm('Deze rental verwijderen?')) return;
-
-    fetch(`/rentalManagement/${id}`, { method: 'DELETE' })
-      .then(res => {
-        if (!res.ok) throw new Error('Delete failed');
-        location.reload();
-      })
-      .catch(() => alert('Verwijderen mislukt.'));
-  });
-</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/javascripts/rentalScripts/rentalIndex.js"></script>

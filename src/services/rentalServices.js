@@ -21,6 +21,9 @@ const rentalService = {
     },
     createRental(rentalData, callback) {
         rentalDao.createRental(rentalData, callback);
+    },
+    closeRental(rentalData, callback) {
+        rentalDao.closeRental(rentalData, callback);
     }
 };
 

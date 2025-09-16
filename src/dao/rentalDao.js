@@ -59,7 +59,8 @@ const rentalDao = {
 
     getAllOpenRentals(callback) {
         const query = `
-            SELECT 
+            SELECT
+                r.rental_id, 
                 CONCAT(c.first_name, ' ', c.last_name) AS customer_name,
                 f.title,
                 r.rental_date,
@@ -80,6 +81,7 @@ const rentalDao = {
     getAllOverdueRentals(callback) {
         const query = `
             SELECT 
+                r.rental_id,
                 CONCAT(c.first_name, ' ', c.last_name) AS customer_name,
                 f.title,
                 r.rental_date,
@@ -101,6 +103,7 @@ const rentalDao = {
         `;
         db.query(query, callback);
     },
+
     createRental(rentalData, callback) {
         const { inventory_id, customer_id, staff_id } = rentalData;
 
@@ -147,6 +150,18 @@ const rentalDao = {
                     });
                 });
             });
+        });
+    },
+    closeRental(rentalId, callback) {
+        let query = `
+            UPDATE rental
+            SET return_date = NOW()
+            WHERE rental_id = ?
+            AND return_date IS NULL;
+        `;
+        db.query(query, [rentalId], (err) => {
+            if (err) return callback(err);
+            callback(null);
         });
     }
 };

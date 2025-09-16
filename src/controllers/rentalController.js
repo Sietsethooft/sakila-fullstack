@@ -120,6 +120,21 @@ const rentalController = {
                 });
             });
         });
+    },
+    closeRental(req, res) {
+        logger.debug('Closing rental with ID:', req.params.id);
+        const rentalId = req.params.id;
+        rentalServices.closeRental(rentalId, (err) => {
+            if (err) {
+                logger.error(`Error closing rental: ${err.message}`);
+                return res.status(500).render('pages/error', {
+                    message: 'Error closing rental',
+                    error: { status: 500, stack: err.stack }
+                });
+            }
+            logger.debug(`Rental with ID ${rentalId} closed successfully`);
+            res.redirect('/rentalManagement?success=3');
+        });
     }
 };
 
