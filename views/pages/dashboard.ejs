@@ -5,19 +5,19 @@
   <% if (user) { %>
   <div class="stats-grid">
     <div class="card">
-      <h3>120</h3>
+      <h3><%= data.active_rentals_count %></h3>
       <p>Active Rentals</p>
     </div>
     <div class="card">
-      <h3>35</h3>
+      <h3><%= data.overdue_rentals_count %></h3>
       <p>Overdue Rentals</p>
     </div>
     <div class="card">
-      <h3>€2,350</h3>
+      <h3><%= data.revenue_this_month %></h3>
       <p>Revenue This Month</p>
     </div>
     <div class="card">
-      <h3>512</h3>
+      <h3><%= data.total_customers_count %></h3>
       <p>Total Customers</p>
     </div>
   </div>
@@ -29,6 +29,7 @@
       <li>The Matrix <span class="count">56 rentals</span></li>
       <li>Inception <span class="count">43 rentals</span></li>
       <li>Finding Nemo <span class="count">39 rentals</span></li>
+      <li>Toy Story <span class="count">35 rentals</span></li>
       <li>Toy Story <span class="count">35 rentals</span></li>
     </ul>
   </div>
