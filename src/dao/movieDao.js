@@ -359,10 +359,24 @@ const movieDao = {
                 AND r.return_date IS NULL
             GROUP BY f.film_id, f.title;
         `;
-        
+
         db.query(query, (err, results) => {
             if (err) return callback(err);
             callback(null, results);
+        });
+    },
+    getInventoryByFilmId(film_id, callback) {
+        const query = `
+            SELECT inventory_id
+            FROM inventory i
+            JOIN film f ON i.film_id = f.film_id
+            WHERE f.film_id = ?
+            LIMIT 1
+            `;
+        db.query(query, [film_id], (err, results) => {
+            if (err) return callback(err);
+            if (results.length === 0) return callback(new Error('No inventory found for this film'));
+            callback(null, results[0]);
         });
     }
 

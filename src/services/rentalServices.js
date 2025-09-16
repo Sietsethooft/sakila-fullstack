@@ -18,6 +18,9 @@ const rentalService = {
     },
     getAllOverdueRentals(callback) {
         rentalDao.getAllOverdueRentals(callback);
+    },
+    createRental(rentalData, callback) {
+        rentalDao.createRental(rentalData, callback);
     }
 };
 

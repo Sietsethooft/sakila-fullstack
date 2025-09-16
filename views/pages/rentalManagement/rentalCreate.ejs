@@ -1,7 +1,7 @@
 <section class="p-40">
   <div class="client-card">
     <h2 class="h2-head">Create Rental</h2>
-    <form action="/rentals/create" method="POST" id="rentalForm" novalidate>
+    <form action="/rentalManagement/create" method="POST" id="rentalForm" novalidate>
       <div class="row g-4">
         <div class="col-12">
           <label for="customerEmail" class="form-label">Customer email</label>
@@ -52,18 +52,20 @@
   <ul id="movieData" hidden>
     <% movies.forEach(function(movie) { %>
       <li 
-        data-id="<%= movie.id %>" 
+        data-film_id="<%= movie.film_id %>" 
         data-title="<%= movie.title %>" 
         data-available="<%= movie.available ? 'true' : 'false' %>">
       </li>
     <% }) %>
   </ul>
 
+  
   <script>
+    // Parse movie data from hidden DOM element
     function getMoviesFromDOM() {
       const items = document.querySelectorAll('#movieData li');
       return Array.from(items).map(li => ({
-        id: li.getAttribute('data-id'),
+        film_id: li.getAttribute('data-film_id'),
         title: li.getAttribute('data-title'),
         available: li.getAttribute('data-available') === 'true'
       }));
@@ -81,15 +83,15 @@
     const resultsEl = document.getElementById("results");
 
     let activeIndex = -1;
-    let currentResults = [];
+    let currentResults = []; // Filtered results based on input
 
-    function filter(query) {
+    function filter(query) { //  Filter movies by title
       const q = query.trim().toLowerCase();
       if (!q) return [];
       return movies.filter(m => m.title.toLowerCase().includes(q));
     }
 
-    function renderResults(items) {
+    function renderResults(items) { // Render filtered results in dropdown
       resultsEl.innerHTML = "";
       if (!items.length) {
         const empty = document.createElement("div");
@@ -98,12 +100,12 @@
         resultsEl.appendChild(empty);
         return;
       }
-      items.forEach((m, idx) => {
+      items.forEach((m, idx) => { // Create result row
         const row = document.createElement("button");
         row.type = "button";
         row.className = "list-group-item list-group-item-action d-flex justify-content-between align-items-center";
         row.setAttribute("role", "option");
-        row.dataset.id = m.id;
+        row.dataset.film_id = m.film_id;
         row.dataset.title = m.title;
 
         const title = document.createElement("span");
@@ -124,29 +126,31 @@
       });
     }
 
-    function openResults() {
+    function openResults() { // Show results dropdown
       resultsEl.classList.remove("d-none");
     }
-    function closeResults() {
+    function closeResults() { // Hide results dropdown
       resultsEl.classList.add("d-none");
       activeIndex = -1;
     }
 
-    function selectMovie(movie) {
-      movieSearchInput.value = movie.title;
-      selectedMovieIdEl.value = String(movie.id);
-      movieError.style.display = "";
-      movieAvailableError.style.display = "";
-      closeResults();
-      renderSelectedPill(movie);
+    function selectMovie(movie) { // Handle movie selection
+        movieSearchInput.value = movie.title;
+        selectedMovieIdEl.value = String(movie.film_id);
+        movieError.style.display = "";
+        movieAvailableError.style.display = "";
+        closeResults();
+        renderSelectedPill(movie);
     }
 
-    function clearSelection() {
-      selectedMovieIdEl.value = "";
-      selectedPillContainer.innerHTML = "";
+    function clearSelection() { // Clear selected movie
+        selectedMovieIdEl.value = "";
+        selectedPillContainer.innerHTML = "";
+        movieSearchInput.value = "";
+        movieSearchInput.readOnly = false;
     }
 
-    function renderSelectedPill(movie) {
+    function renderSelectedPill(movie) { // Show selected movie as a pill
       selectedPillContainer.innerHTML = "";
       const pill = document.createElement("span");
       pill.className = "badge rounded-pill bg-light text-dark border";
@@ -166,7 +170,6 @@
 
     // Input behavior
     movieSearchInput.addEventListener("input", (e) => {
-      clearSelection();
       const q = e.target.value;
       currentResults = filter(q);
       if (q) {
@@ -235,42 +238,43 @@
 
     // Validation and submit
     form.addEventListener("submit", function(event) {
-    let valid = true;
+      let valid = true;
 
-    // Reset feedback
-    emailInput.classList.remove('is-invalid');
-    movieSearchInput.classList.remove('is-invalid');
-    movieError.style.display = "none";
-    movieAvailableError.style.display = "none";
+      // Reset feedback
+      emailInput.classList.remove('is-invalid');
+      movieSearchInput.classList.remove('is-invalid');
+      movieError.style.display = "none";
+      movieAvailableError.style.display = "none";
 
-    // Email validation
-    if (!emailInput.value || !emailInput.checkValidity()) {
-        emailInput.classList.add('is-invalid');
-        valid = false;
-    }
+      // Email validation
+      if (!emailInput.value || !emailInput.checkValidity()) {
+          emailInput.classList.add('is-invalid');
+          valid = false;
+      }
 
-    // Movie selection validation
-    if (!selectedMovieIdEl.value) {
-        movieSearchInput.classList.add('is-invalid');
-        movieError.style.display = "block";
-        valid = false;
-    } else {
-        movieError.style.display = "none";
-        const selectedMovie = movies.find(m => String(m.id) === selectedMovieIdEl.value);
-        if (!selectedMovie || !selectedMovie.available) {
-        movieSearchInput.classList.add('is-invalid');
-        movieAvailableError.style.display = "block";
-        valid = false;
-        } else {
-        movieAvailableError.style.display = "none";
-        }
-    }
+      // Movie selection validation
+      const pillVisible = selectedPillContainer.innerHTML.trim().length > 0;
+      if (!selectedMovieIdEl.value || !pillVisible) {
+          movieSearchInput.classList.add('is-invalid');
+          movieError.style.display = "block";
+          valid = false;
+      } else {
+          movieError.style.display = "none";
+          const selectedMovie = movies.find(m => String(m.film_id) === selectedMovieIdEl.value);
+          if (!selectedMovie || !selectedMovie.available) {
+              movieSearchInput.classList.add('is-invalid');
+              movieAvailableError.style.display = "block";
+              valid = false;
+          } else {
+              movieAvailableError.style.display = "none";
+          }
+      }
 
-    form.classList.add('was-validated');
-    if (!valid) {
-        event.preventDefault();
-        event.stopPropagation();
-    }
+      form.classList.add('was-validated');
+      if (!valid) {
+          event.preventDefault();
+          event.stopPropagation();
+      }
     });
 
     // Hide feedback on input

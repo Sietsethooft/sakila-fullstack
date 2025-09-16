@@ -101,6 +101,60 @@ const rentalDao = {
         `;
         db.query(query, callback);
     },
+    createRental(rentalData, callback) {
+        const { inventory_id, customer_id, staff_id } = rentalData;
 
+        db.query('START TRANSACTION', (err) => {
+            if (err) return callback(err);
+
+            // 1. Insert rental
+            const rentalSql = `
+                INSERT INTO rental (rental_date, inventory_id, customer_id, staff_id, last_update)
+                VALUES (NOW(), ?, ?, ?, NOW())
+            `;
+            db.query(rentalSql, [inventory_id, customer_id, staff_id], (err, result) => {
+                if (err) return rollback(callback, err);
+
+                const rental_id = result.insertId;
+
+                // 2. Get rental_rate from the film linked to this inventory
+                const rateSql = `
+                    SELECT f.rental_rate
+                    FROM inventory i
+                    JOIN film f ON i.film_id = f.film_id
+                    WHERE i.inventory_id = ?
+                    LIMIT 1
+                `;
+                db.query(rateSql, [inventory_id], (err, results) => {
+                    if (err) return rollback(callback, err);
+                    if (results.length === 0) return rollback(callback, new Error('Inventory not found'));
+
+                    const amount = results[0].rental_rate;
+
+                    // 3. Insert payment
+                    const paymentSql = `
+                        INSERT INTO payment (customer_id, staff_id, rental_id, amount, payment_date)
+                        VALUES (?, ?, ?, ?, NOW())
+                    `;
+                    db.query(paymentSql, [customer_id, staff_id, rental_id, amount], (err) => {
+                        if (err) return rollback(callback, err);
+
+                        db.query('COMMIT', (err) => {
+                            if (err) return rollback(callback, err);
+
+                            callback(null, { rental_id, amount });
+                        });
+                    });
+                });
+            });
+        });
+    }
 };
+
+function rollback(callback, err) {
+    db.query('ROLLBACK', () => {
+        callback(err);
+    });
+}
+
 module.exports = rentalDao;

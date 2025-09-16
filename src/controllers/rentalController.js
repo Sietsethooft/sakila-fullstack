@@ -1,8 +1,8 @@
 const rentalServices = require('../services/rentalServices');
 const movieServices = require('../services/movieServices');
+const clientService = require('../services/clientServices');
 const logger = require('../utils/logger');
 const formatDate  = require('../utils/formatDate');
-const { getMovies } = require('../dao/movieDao');
 
 const rentalController = {
     getAllRentals(req, res) {
@@ -59,6 +59,58 @@ const rentalController = {
             }
             res.render('pages/rentalManagement/rentalCreate', {
                 movies: movies
+            });
+        });
+    },
+    createRental(req, res) {
+        const { customerEmail, movieId } = req.body;
+        console.debug(req.body);
+        const staff_id = res.locals.user ? res.locals.user.id : undefined;
+
+        clientService.getClientIdByEmail(customerEmail, (err, client) => {
+            if (err) {
+                logger.error(`Error retrieving client by email: ${err.message}`);
+                return res.status(500).render('pages/error', {
+                    message: 'Error retrieving client by email',
+                    error: { status: 500, stack: err.stack }
+                });
+            }
+            if (!client) {
+                logger.warn(`No client found with email: ${customerEmail}`);
+                return res.status(400).render('pages/error', {
+                    message: 'No client found with this email',
+                    error: { status: 400 }
+                });
+            }
+
+            logger.debug(`Client retrieved by email ${customerEmail}: ${JSON.stringify(client)}`);
+
+            const customer_id = client;
+
+                movieServices.getInventoryByFilmId(movieId, (err2, inventory) => {
+                    if (err2) {
+                        logger.error(`Error retrieving inventory for film ID ${movieId}: ${err2.message}`);
+                        return res.status(500).render('pages/error', {
+                            message: 'Error retrieving inventory for film',
+                            error: { status: 500, stack: err2.stack }
+                        });
+                    }
+                    logger.debug(`Inventory retrieved for film ID ${movieId}: ${JSON.stringify(inventory)}`);
+
+                    const inventory_id = inventory.inventory_id;
+
+                    logger.debug(`Creating rental with customer_id: ${customer_id}, inventory_id: ${inventory_id}, staff_id: ${staff_id}`);
+
+                        rentalServices.createRental({ customer_id, inventory_id, staff_id }, (err, rental) => {
+                            if (err) {
+                                logger.error(`Error creating rental: ${err.message}`);
+                                return res.status(500).render('pages/error', {
+                            message: 'Error creating rental',
+                            error: { status: 500, stack: err.stack }
+                        });
+                    }
+                    res.redirect('/rentalManagement');
+                });
             });
         });
     }

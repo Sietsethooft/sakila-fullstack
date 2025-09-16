@@ -15,6 +15,9 @@ const clientService = {
     },
     updateClient(customer_id, clientData, callback) {
         clientDao.updateClient(customer_id, clientData, callback);
+    },
+    getClientIdByEmail(email, callback) {
+        clientDao.getClientIdByEmail(email, callback);
     }
 };
 

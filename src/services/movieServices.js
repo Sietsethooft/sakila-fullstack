@@ -18,6 +18,9 @@ const movieService = {
     },
     getMovieAvailabilities(callback) {
         movieDao.getMovieAvailabilities(callback);
+    },
+    getInventoryByFilmId(film_id, callback) {
+        movieDao.getInventoryByFilmId(film_id, callback);
     }
 };
 
