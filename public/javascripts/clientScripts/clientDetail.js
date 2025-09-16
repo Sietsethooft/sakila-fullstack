@@ -38,8 +38,7 @@ document.addEventListener('click', function (e) {
       showCancelButton: true,
       confirmButtonText: 'Yes, close',
       cancelButtonText: 'Cancel',
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33'
+      confirmButtonColor: '#d33',
     }).then((result) => {
       if (result.isConfirmed) {
         const form = document.getElementById('close-rental-form');
