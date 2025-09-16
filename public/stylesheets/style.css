@@ -325,6 +325,68 @@ main {
   box-shadow: 0 4px 24px rgba(0,0,0,0.15);
 }
 
+/* Dashboard CSS */
+  .dashboard {
+    padding: 2rem;
+  }
+
+  .dashboard .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .dashboard .card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    text-align: center;
+  }
+
+  .dashboard .card h3 {
+    margin: 0;
+    font-size: 1.8rem;
+    color: #2c3e50;
+  }
+
+  .dashboard .card p {
+    margin: 0.5rem 0 0;
+    color: #777;
+  }
+
+  .dashboard .top-movies ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .dashboard .top-movies li {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.6rem 1rem;
+    background: #f8f9fa;
+    border-radius: 6px;
+    margin-bottom: 0.5rem;
+  }
+
+  .dashboard .count {
+    font-weight: bold;
+    color: #2c3e50;
+  }
+
+  .dashboard .quick-actions {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .dashboard .btn .material-icons {
+    vertical-align: middle;
+    font-size: 1.4em;
+    line-height: 1;
+    position: relative;
+    top: -1px;
+  }
 /*Extra CSS*/
 
 .p-40 {

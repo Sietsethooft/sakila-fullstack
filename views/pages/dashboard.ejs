@@ -1,4 +1,52 @@
-  <body>
-    <h1>Pagina</h1>
-    <p>Welcome to MovieMate</p>
-  </body>
+<section class="dashboard">
+  <h2 class="mb-4">Welcome to MovieMate</h2>
+  <p class="text-muted mb-5">Your video rental overview at a glance </p>
+
+  <% if (user) { %>
+  <div class="stats-grid">
+    <div class="card">
+      <h3>120</h3>
+      <p>Active Rentals</p>
+    </div>
+    <div class="card">
+      <h3>35</h3>
+      <p>Overdue Rentals</p>
+    </div>
+    <div class="card">
+      <h3>€2,350</h3>
+      <p>Revenue This Month</p>
+    </div>
+    <div class="card">
+      <h3>512</h3>
+      <p>Total Customers</p>
+    </div>
+  </div>
+  <% } %>
+
+  <div class="top-movies">
+    <h3 class="mt-5 mb-3">🎥 Top Rented Movies</h3>
+    <ul>
+      <li>The Matrix <span class="count">56 rentals</span></li>
+      <li>Inception <span class="count">43 rentals</span></li>
+      <li>Finding Nemo <span class="count">39 rentals</span></li>
+      <li>Toy Story <span class="count">35 rentals</span></li>
+    </ul>
+  </div>
+
+<div class="quick-actions d-flex mt-5 justify-content-center gap-4">
+  <button class="btn btn-primary">
+    <span class="material-icons me-2">groups</span>
+    Manage Clients
+  </button>
+  <button class="btn btn-primary">
+    <span class="material-icons me-2">movie</span>
+    Manage Movies
+  </button>
+  <button class="btn btn-primary">
+    <span class="material-icons me-2">assignment_returned</span>
+    Manage Rentals
+  </button>
+</div>
+</section>
+
+<script src="/javascripts/dashboard.js"></script>
