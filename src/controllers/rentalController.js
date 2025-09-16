@@ -64,10 +64,10 @@ const rentalController = {
     },
     createRental(req, res) {
         const { customerEmail, movieId } = req.body;
-        console.debug(req.body);
+        logger.debug(req.body);
         const staff_id = res.locals.user ? res.locals.user.id : undefined;
 
-        clientService.getClientIdByEmail(customerEmail, (err, client) => {
+        clientService.getClientIdByEmail(customerEmail, (err, customer_id) => {
             if (err) {
                 logger.error(`Error retrieving client by email: ${err.message}`);
                 return res.status(500).render('pages/error', {
@@ -75,17 +75,25 @@ const rentalController = {
                     error: { status: 500, stack: err.stack }
                 });
             }
-            if (!client) {
+            if (!customer_id) {
                 logger.warn(`No client found with email: ${customerEmail}`);
-                return res.status(400).render('pages/error', {
-                    message: 'No client found with this email',
-                    error: { status: 400 }
+                // Get movie availabilities again to re-render the form
+                movieServices.getMovieAvailabilities((err2, movies) => {
+                    if (err2) {
+                        logger.error(`Error retrieving movies for rental creation: ${err2.message}`);
+                        return res.status(500).render('pages/error', {
+                            message: 'Error retrieving movies for rental creation',
+                            error: { status: 500, stack: err2.stack }
+                        });
+                    }
+                    return res.status(400).render('pages/rentalManagement/rentalCreate', {
+                        movies: movies,
+                        formError: 'No client found with this email address.',
+                        oldMovieId: movieId
+                    });
                 });
+                return;
             }
-
-            logger.debug(`Client retrieved by email ${customerEmail}: ${JSON.stringify(client)}`);
-
-            const customer_id = client;
 
                 movieServices.getInventoryByFilmId(movieId, (err2, inventory) => {
                     if (err2) {
@@ -95,7 +103,6 @@ const rentalController = {
                             error: { status: 500, stack: err2.stack }
                         });
                     }
-                    logger.debug(`Inventory retrieved for film ID ${movieId}: ${JSON.stringify(inventory)}`);
 
                     const inventory_id = inventory.inventory_id;
 

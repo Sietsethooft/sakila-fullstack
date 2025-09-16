@@ -1,6 +1,11 @@
 <section class="p-40">
   <div class="client-card">
     <h2 class="h2-head">Create Rental</h2>
+    <% if (typeof formError !== 'undefined' && formError) { %>
+      <div class="alert alert-danger" role="alert">
+        <%= formError %>
+      </div>
+    <% } %>
     <form action="/rentalManagement/create" method="POST" id="rentalForm" novalidate>
       <div class="row g-4">
         <div class="col-12">
@@ -281,5 +286,14 @@
     emailInput.addEventListener("input", () => {
       emailInput.classList.remove('is-invalid');
     });
+
+    // Restore selected movie if oldMovieId is provided from server
+  <% if (typeof oldMovieId !== 'undefined' && oldMovieId) { %>
+    const oldMovieId = "<%= oldMovieId %>";
+    const oldMovie = movies.find(m => String(m.film_id) === oldMovieId);
+    if (oldMovie) {
+      selectMovie(oldMovie);
+    }
+  <% } %>
   </script>
 </section>
