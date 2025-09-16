@@ -163,12 +163,21 @@ const clientDao = {
             });
         });
     },
+
     getClientIdByEmail(email, callback) {
         const query = 'SELECT customer_id FROM customer WHERE email = ? LIMIT 1';
         db.query(query, [email], (err, results) => {
             if (err) return callback(err);
             if (results.length === 0) return callback(null, null);
             callback(null, results[0].customer_id);
+        });
+    },
+    
+    getTotalCustomersCount: (callback) => {
+        const query = 'SELECT COUNT(*) AS total_customers_count FROM customer';
+        db.query(query, (err, results) => {
+            if (err) return callback(err);
+            callback(null, results[0].total_customers_count);
         });
     }
 };

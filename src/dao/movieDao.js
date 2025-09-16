@@ -365,6 +365,7 @@ const movieDao = {
             callback(null, results);
         });
     },
+    
     getInventoryByFilmId(film_id, callback) {
         const query = `
             SELECT inventory_id

@@ -152,6 +152,7 @@ const rentalDao = {
             });
         });
     },
+
     closeRental(rentalId, callback) {
         let query = `
             UPDATE rental
@@ -163,7 +164,35 @@ const rentalDao = {
             if (err) return callback(err);
             callback(null);
         });
+    },
+
+    getActiveRentalsCount(callback) {
+        const query = `
+            SELECT COUNT(*) AS active_rentals_count
+            FROM rental
+            WHERE return_date IS NULL;
+        `;
+        db.query(query, (err, results) => {
+            if (err) return callback(err);
+            const count = results[0]?.active_rentals_count || 0;
+            callback(null, count);
+        });
+    },
+    
+    getOverdueRentalsCount(callback) {
+        const query = `
+            SELECT COUNT(*) AS overdue_rentals_count
+            FROM rental
+            WHERE return_date IS NULL
+            AND NOW() > DATE_ADD(rental_date, INTERVAL (SELECT rental_duration FROM film WHERE film_id = (SELECT film_id FROM inventory WHERE inventory_id = rental.inventory_id)) DAY);
+        `;
+        db.query(query, (err, results) => {
+            if (err) return callback(err);
+            const count = results[0]?.overdue_rentals_count || 0;
+            callback(null, count);
+        });
     }
+
 };
 
 function rollback(callback, err) {

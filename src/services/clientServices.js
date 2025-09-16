@@ -18,6 +18,9 @@ const clientService = {
     },
     getClientIdByEmail(email, callback) {
         clientDao.getClientIdByEmail(email, callback);
+    },
+    getTotalCustomersCount: (callback) => {
+        clientDao.getTotalCustomersCount(callback);
     }
 };
 

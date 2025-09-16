@@ -24,6 +24,12 @@ const rentalService = {
     },
     closeRental(rentalData, callback) {
         rentalDao.closeRental(rentalData, callback);
+    },
+    getActiveRentalsCount(callback) {
+        rentalDao.getActiveRentalsCount(callback);
+    },
+    getOverdueRentalsCount(callback) {
+        rentalDao.getOverdueRentalsCount(callback);
     }
 };
 
