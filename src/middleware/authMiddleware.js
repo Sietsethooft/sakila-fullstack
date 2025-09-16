@@ -5,7 +5,7 @@ module.exports = (req, res, next) => {
     if (!token) {
         return res.redirect('/auth/login');
     }
-    jwt.verify(token, 'secretkey', (err, decoded) => {
+    jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
         if (err) {
             return res.redirect('/auth/login');
         }
