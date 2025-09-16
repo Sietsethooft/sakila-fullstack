@@ -76,7 +76,7 @@ jobs:
               { "name": "DB_HOST", "value": "${{ secrets.DB_HOST }}", "slotSetting": false },
               { "name": "DB_USER", "value": "${{ secrets.DB_USER }}", "slotSetting": false },
               { "name": "DB_PASSWORD", "value": "${{ secrets.DB_PASSWORD }}", "slotSetting": false },
-              { "name": "DB_NAME", "value": "${{ secrets.DB_DATABASE }}", "slotSetting": false },
+              { "name": "DB_DATABASE", "value": "${{ secrets.DB_DATABASE }}", "slotSetting": false },
               { "name": "DB_PORT", "value": "${{ secrets.DB_PORT }}", "slotSetting": false },
               { "name": "SECRET_KEY", "value": "${{ secrets.SECRET_KEY }}", "slotSetting": false }
             ]
