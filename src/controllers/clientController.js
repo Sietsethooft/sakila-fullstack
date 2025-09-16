@@ -66,6 +66,7 @@ const clientController = {
                         res.status(500).send('Error retrieving active rentals');
                     } else {
                         const formattedActiveRentals = activeRentals.map(rental => ({
+                            rental_id: rental.rental_id,
                             title: rental.title,
                             hired_on: formatDate(rental.hired_on),
                             return_by: formatDate(rental.return_by),
@@ -84,6 +85,7 @@ const clientController = {
                                     price: `€${Number(rental.amount).toFixed(2).replace('.', ',')}`
                                 }));
                                 logger.debug(`Client details viewed: ID ${customer_id}, Name: ${formattedClient.name}`);
+                                logger.debug(`Active rentals are: ${JSON.stringify(formattedActiveRentals)}`);
                                 res.render('pages/clientManagement/clientDetail', {
                                     data: { client: formattedClient },
                                     activeRentals: formattedActiveRentals,

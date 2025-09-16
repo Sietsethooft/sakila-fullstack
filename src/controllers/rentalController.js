@@ -125,6 +125,7 @@ const rentalController = {
     closeRental(req, res) {
         logger.debug('Closing rental with ID:', req.params.id);
         const rentalId = req.params.id;
+        const clientId = req.body.clientId || null; // Get clientId from hidden input, if available
         rentalServices.closeRental(rentalId, (err) => {
             if (err) {
                 logger.error(`Error closing rental: ${err.message}`);
@@ -134,6 +135,10 @@ const rentalController = {
                 });
             }
             logger.debug(`Rental with ID ${rentalId} closed successfully`);
+            if (clientId) {
+                // Redirect back to the client's detail page if clientId is available
+                return res.redirect(`/clientManagement/${clientId}?success=4`);
+            }
             res.redirect('/rentalManagement?success=3');
         });
     }

@@ -16,7 +16,7 @@ const rentalDao = {
 
     getActiveRentalsByCustomerId(customer_id, callback) {
         let query = `
-            SELECT film.title, DATE(rental.rental_date) AS hired_on,
+            SELECT rental.rental_id, film.title, DATE(rental.rental_date) AS hired_on,
             DATE(DATE_ADD(rental.rental_date, INTERVAL film.rental_duration DAY)) AS return_by,
             payment.amount AS price
             FROM rental

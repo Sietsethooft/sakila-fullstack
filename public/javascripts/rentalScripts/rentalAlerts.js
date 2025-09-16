@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Success delete alert
+    // Success close alert
     if (window.rentalSuccess == 3) {
         Swal.fire({
             title: 'Rental closed successfully!',

@@ -34,4 +34,13 @@ document.addEventListener('DOMContentLoaded', function() {
             confirmButtonText: 'OK'
         });
     }
+
+    // Success close rental alert
+    if (window.clientSuccess == 4) {
+        Swal.fire({
+            title: 'Rental closed successfully!',
+            icon: 'success',
+            confirmButtonText: 'OK'
+        });
+    }
 });
