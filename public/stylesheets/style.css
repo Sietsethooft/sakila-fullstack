@@ -326,9 +326,6 @@ main {
 }
 
 /* Dashboard CSS */
-  .dashboard {
-    padding: 2rem;
-  }
 
   .dashboard .stats-grid {
     display: grid;
@@ -353,7 +350,7 @@ main {
 
   .dashboard .card p {
     margin: 0.5rem 0 0;
-    color: #777;
+    color: #686868;
   }
 
   .dashboard .top-movies ul {
@@ -365,7 +362,7 @@ main {
     display: flex;
     justify-content: space-between;
     padding: 0.6rem 1rem;
-    background: #f8f9fa;
+    background: #e0e0e2;
     border-radius: 6px;
     margin-bottom: 0.5rem;
   }

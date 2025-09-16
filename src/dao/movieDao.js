@@ -379,6 +379,25 @@ const movieDao = {
             if (results.length === 0) return callback(new Error('No inventory found for this film'));
             callback(null, results[0]);
         });
+    },
+
+    getTopMovies(callback) {
+        const query = `
+            SELECT 
+                f.film_id,
+                f.title,
+                COUNT(r.rental_id) AS rental_count
+            FROM film f
+            LEFT JOIN inventory i ON f.film_id = i.film_id
+            LEFT JOIN rental r ON i.inventory_id = r.inventory_id
+            GROUP BY f.film_id, f.title
+            ORDER BY rental_count DESC
+            LIMIT 5;    
+        `;
+        db.query(query, (err, results) => {
+            if (err) return callback(err);
+            callback(null, results);
+        });
     }
 
 }

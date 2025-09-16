@@ -21,6 +21,9 @@ const movieService = {
     },
     getInventoryByFilmId(film_id, callback) {
         movieDao.getInventoryByFilmId(film_id, callback);
+    },
+    getTopMovies(callback) {
+        movieDao.getTopMovies(callback);
     }
 };
 

@@ -1,6 +1,8 @@
 const clientServices = require('../services/clientServices');
 const rentalServices = require('../services/rentalServices');
 const revenueServices = require('../services/revenueServices');
+const movieServices = require('../services/movieServices');
+const logger = require('../utils/logger');
 
 const dashboardController = {
     getDashboardInformation: (req, res) => {
@@ -40,18 +42,28 @@ const dashboardController = {
                             });
                         }
 
-                        res.render('pages/dashboard', {
-                            data: {
-                                active_rentals_count,
-                                overdue_rentals_count,
-                                revenue_this_month,
-                                total_customers_count
+                        movieServices.getTopMovies((error, top_movies) => {
+                            if (error) {
+                                logger.error('Error fetching top movies:', error);
+                                return res.status(500).render('pages/error', {
+                                    message: 'Internal Server Error',
+                                    error: { status: 500, stack: error.stack }
+                                });
                             }
+
+                            res.render('pages/dashboard', {
+                                data: {
+                                    active_rentals_count,
+                                    overdue_rentals_count,
+                                    revenue_this_month,
+                                    total_customers_count,
+                                    top_movies
+                                }
+                            });
                         });
                     });
                 });
             });
-
         });
     }
 }
