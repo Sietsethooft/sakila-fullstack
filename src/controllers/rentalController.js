@@ -50,6 +50,7 @@ const rentalController = {
         });
     },
     getCreateRentalForm(req, res) {
+        const givenEmail = req.query.email || '';
         movieServices.getMovieAvailabilities((err, movies) => {
             if (err) {
                 logger.error(`Error retrieving movies for rental creation: ${err.message}`);
@@ -59,7 +60,8 @@ const rentalController = {
                 });
             }
             res.render('pages/rentalManagement/rentalCreate', {
-                movies: movies
+                movies: movies,
+                email: givenEmail
             });
         });
     },

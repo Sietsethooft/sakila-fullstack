@@ -85,7 +85,6 @@ const clientController = {
                                     price: `€${Number(rental.amount).toFixed(2).replace('.', ',')}`
                                 }));
                                 logger.debug(`Client details viewed: ID ${customer_id}, Name: ${formattedClient.name}`);
-                                logger.debug(`Active rentals are: ${JSON.stringify(formattedActiveRentals)}`);
                                 res.render('pages/clientManagement/clientDetail', {
                                     data: { client: formattedClient },
                                     activeRentals: formattedActiveRentals,

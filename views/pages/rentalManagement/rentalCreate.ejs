@@ -16,6 +16,7 @@
             id="customerEmail"
             name="customerEmail"
             placeholder="e.g. customer@example.com"
+            value="<%= typeof email !== 'undefined' ? email : '' %>"
             required
           />
           <div class="invalid-feedback">Enter a valid email address.</div>
