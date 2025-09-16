@@ -55,6 +55,10 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_8D8C98113D2E4D2C868906F6DF4EB9FC }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_05DF7ACE005A47FA8D4B8114E9B8FDBC }}
 
+      - name: Debug DB_PORT
+        run: |
+          if [ -z "${{ secrets.DB_PORT }}" ]; then echo "DB_PORT is empty"; else echo "DB_PORT is set"; fi
+
       - name: Test database connection
         run: |
           sudo apt-get update
