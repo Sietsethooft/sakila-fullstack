@@ -65,7 +65,7 @@ const movieController = {
             }
             else if (!movie) {
                 logger.warn(`Movie not found: ID ${film_id}`);
-                res.status(404).render('pages/error', {
+                return res.status(404).render('pages/error', {
                     message: 'Movie not found',
                     error: { status: 404, stack: '' }
                 });
