@@ -6,7 +6,7 @@ const formatDate  = require('../utils/formatDate');
 
 const rentalController = {
     getAllRentals(req, res) {
-
+        const success = req.query.success || null;
         rentalServices.getAllOpenRentals((err, openRentals) => {
             if (err) {
                 logger.error(`Error retrieving open rentals: ${err.message}`);
@@ -43,7 +43,8 @@ const rentalController = {
 
                 res.render('pages/rentalManagement/rentalIndex', {
                     openRentals: openRentals,
-                    overdueRentals: overdueRentals
+                    overdueRentals: overdueRentals,
+                    success: success
                 });
             });
         });
@@ -116,7 +117,7 @@ const rentalController = {
                             error: { status: 500, stack: err.stack }
                         });
                     }
-                    res.redirect('/rentalManagement');
+                    res.redirect('/rentalManagement?success=1');
                 });
             });
         });

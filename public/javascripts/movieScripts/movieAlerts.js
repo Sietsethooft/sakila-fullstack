@@ -1,15 +1,15 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Error delete alert
-    if (window.clientError) {
+    if (window.movieError) {
         Swal.fire({
             icon: "error",
             title: "Movie cannot be deleted",
-            text: window.clientError
+            text: window.movieError
         });
     }
 
     // Success add alert
-    if (window.clientSuccess == 1) {
+    if (window.movieSuccess == 1) {
         Swal.fire({
             title: 'Movie added successfully!',
             icon: 'success',
@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Success edit alert
-    if (window.clientSuccess == 2) {
+    if (window.movieSuccess == 2) {
         Swal.fire({
             title: 'Movie updated successfully!',
             icon: 'success',
@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Success delete alert
-    if (window.clientSuccess == 3) {
+    if (window.movieSuccess == 3) {
         Swal.fire({
             title: 'Movie deleted successfully!',
             icon: 'success',
