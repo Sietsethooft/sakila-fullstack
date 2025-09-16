@@ -55,6 +55,14 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_8D8C98113D2E4D2C868906F6DF4EB9FC }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_05DF7ACE005A47FA8D4B8114E9B8FDBC }}
 
+      - name: Test database connection
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y mysql-client
+          mysql -h "${{ secrets.DB_HOST }}" -u"${{ secrets.DB_USER }}" -p"${{ secrets.DB_PASSWORD }}" -P "${{ secrets.DB_PORT }}" -e "USE ${DB_NAME}; SHOW TABLES;"
+        env:
+          DB_NAME: ${{ secrets.DB_NAME }}
+
       - name: Set Azure Web App settings from secrets
         uses: azure/appservice-settings@v1
         with:
