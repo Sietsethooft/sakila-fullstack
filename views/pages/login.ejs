@@ -1,0 +1,42 @@
+<section class="login-container">
+  <h1 class="mb-3 fw-bold">Welcome back!</h1>
+  <h3 class="mb-4">Login</h3>
+  <% if (error) { %>
+    <div class="alert alert-danger" role="alert">
+      <%= error %>
+    </div>
+  <% } %>
+  <form method="POST" action="/auth/login" class="login-form needs-validation" novalidate>
+    <div class="mb-3 input-group">
+      <span class="input-group-text"><span class="material-icons">person</span></span>
+      <input type="text" name="username" class="form-control input-field-focus" placeholder="Username" required>
+      <div class="invalid-feedback">
+        Please enter your username.
+      </div>
+    </div>
+    <div class="mb-3 input-group ">
+      <span class="input-group-text"><span class="material-icons">lock</span></span>
+      <input type="password" name="password" class="form-control input-field-focus" placeholder="Password" required>
+      <div class="invalid-feedback">
+        Please enter your password.
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary w-100">LOG IN</button>
+  </form>
+</section>
+
+<script>
+    (() => {
+    'use strict';
+    const forms = document.querySelectorAll('.needs-validation');
+    Array.from(forms).forEach(form => {
+      form.addEventListener('submit', event => {
+        if (!form.checkValidity()) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+      }, false);
+    });
+  })();
+</script>

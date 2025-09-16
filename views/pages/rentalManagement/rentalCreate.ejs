@@ -1,0 +1,300 @@
+<section class="p-40">
+  <div class="client-card">
+    <h2 class="h2-head">Create Rental</h2>
+    <% if (typeof formError !== 'undefined' && formError) { %>
+      <div class="alert alert-danger" role="alert">
+        <%= formError %>
+      </div>
+    <% } %>
+    <form action="/rentalManagement/create" method="POST" id="rentalForm" novalidate>
+      <div class="row g-4">
+        <div class="col-12">
+          <label for="customerEmail" class="form-label">Customer email</label>
+          <input
+            type="email"
+            class="form-control input-field-focus"
+            id="customerEmail"
+            name="customerEmail"
+            placeholder="e.g. customer@example.com"
+            value="<%= typeof email !== 'undefined' ? email : '' %>"
+            required
+          />
+          <div class="invalid-feedback">Enter a valid email address.</div>
+        </div>
+
+        <div class="col-12">
+          <label for="movieSearch" class="form-label">Select Movie</label>
+          <div class="position-relative">
+            <input
+              type="text"
+              class="form-control input-field-focus"
+              id="movieSearch"
+              placeholder="Search by title..."
+              autocomplete="off"
+              required
+            />
+            <input type="hidden" id="selectedMovieId" name="movieId" required />
+            <div
+              id="results"
+              class="list-group shadow-sm mt-1 position-absolute w-100 d-none"
+              style="max-height: 260px; overflow: auto; z-index: 1050;"
+              role="listbox"
+              aria-label="Search results"
+            ></div>
+          </div>
+          <div class="form-text">Type to search and click on a movie to select it.</div>
+          <div class="invalid-feedback" id="movieError">Select a movie.</div>
+          <div class="invalid-feedback" id="movieAvailableError">Selected movie is not available.</div>
+          <div id="selectedPillContainer" class="mt-2"></div>
+        </div>
+      </div>
+      <div class="mt-4 d-flex justify-content-end">
+        <button type="submit" class="btn btn-primary">Submit Rental</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Hidden movie data as HTML -->
+  <ul id="movieData" hidden>
+    <% movies.forEach(function(movie) { %>
+      <li 
+        data-film_id="<%= movie.film_id %>" 
+        data-title="<%= movie.title %>" 
+        data-available="<%= movie.available ? 'true' : 'false' %>">
+      </li>
+    <% }) %>
+  </ul>
+
+  
+  <script>
+    // Parse movie data from hidden DOM element
+    function getMoviesFromDOM() {
+      const items = document.querySelectorAll('#movieData li');
+      return Array.from(items).map(li => ({
+        film_id: li.getAttribute('data-film_id'),
+        title: li.getAttribute('data-title'),
+        available: li.getAttribute('data-available') === 'true'
+      }));
+    }
+
+    const movies = getMoviesFromDOM();
+
+    const form = document.getElementById("rentalForm");
+    const emailInput = document.getElementById("customerEmail");
+    const movieSearchInput = document.getElementById("movieSearch");
+    const selectedMovieIdEl = document.getElementById("selectedMovieId");
+    const movieError = document.getElementById("movieError");
+    const movieAvailableError = document.getElementById("movieAvailableError");
+    const selectedPillContainer = document.getElementById("selectedPillContainer");
+    const resultsEl = document.getElementById("results");
+
+    let activeIndex = -1;
+    let currentResults = []; // Filtered results based on input
+
+    function filter(query) { //  Filter movies by title
+      const q = query.trim().toLowerCase();
+      if (!q) return [];
+      return movies.filter(m => m.title.toLowerCase().includes(q));
+    }
+
+    function renderResults(items) { // Render filtered results in dropdown
+      resultsEl.innerHTML = "";
+      if (!items.length) {
+        const empty = document.createElement("div");
+        empty.className = "list-group-item d-flex justify-content-between align-items-center disabled";
+        empty.textContent = "No results";
+        resultsEl.appendChild(empty);
+        return;
+      }
+      items.forEach((m, idx) => { // Create result row
+        const row = document.createElement("button");
+        row.type = "button";
+        row.className = "list-group-item list-group-item-action d-flex justify-content-between align-items-center";
+        row.setAttribute("role", "option");
+        row.dataset.film_id = m.film_id;
+        row.dataset.title = m.title;
+
+        const title = document.createElement("span");
+        title.textContent = m.title;
+
+        const badge = document.createElement("span");
+        badge.className = "badge " + (m.available ? "bg-success" : "bg-danger");
+        badge.textContent = m.available ? "Available" : "Not available";
+
+        row.appendChild(title);
+        row.appendChild(badge);
+
+        row.addEventListener("click", () => selectMovie(m));
+
+        resultsEl.appendChild(row);
+
+        if (idx === activeIndex) row.classList.add("active");
+      });
+    }
+
+    function openResults() { // Show results dropdown
+      resultsEl.classList.remove("d-none");
+    }
+    function closeResults() { // Hide results dropdown
+      resultsEl.classList.add("d-none");
+      activeIndex = -1;
+    }
+
+    function selectMovie(movie) { // Handle movie selection
+        movieSearchInput.value = movie.title;
+        selectedMovieIdEl.value = String(movie.film_id);
+        movieError.style.display = "";
+        movieAvailableError.style.display = "";
+        closeResults();
+        renderSelectedPill(movie);
+    }
+
+    function clearSelection() { // Clear selected movie
+        selectedMovieIdEl.value = "";
+        selectedPillContainer.innerHTML = "";
+        movieSearchInput.value = "";
+        movieSearchInput.readOnly = false;
+    }
+
+    function renderSelectedPill(movie) { // Show selected movie as a pill
+      selectedPillContainer.innerHTML = "";
+      const pill = document.createElement("span");
+      pill.className = "badge rounded-pill bg-light text-dark border";
+      pill.textContent = "🎬 " + movie.title + " ";
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "btn btn-sm btn-link p-0 ms-2";
+      btn.title = "Remove selection";
+      btn.textContent = "×";
+      btn.addEventListener("click", () => {
+        clearSelection();
+        movieSearchInput.focus();
+      });
+      pill.appendChild(btn);
+      selectedPillContainer.appendChild(pill);
+    }
+
+    // Input behavior
+    movieSearchInput.addEventListener("input", (e) => {
+      const q = e.target.value;
+      currentResults = filter(q);
+      if (q) {
+        activeIndex = -1;
+        renderResults(currentResults);
+        openResults();
+      } else {
+        closeResults();
+      }
+      movieSearchInput.classList.remove('is-invalid');
+      movieError.style.display = "";
+      movieAvailableError.style.display = "";
+    });
+
+    movieSearchInput.addEventListener("focus", () => {
+      if (movieSearchInput.value.trim()) {
+        currentResults = filter(movieSearchInput.value);
+        renderResults(currentResults);
+        openResults();
+      }
+    });
+
+    // Keyboard navigation
+    movieSearchInput.addEventListener("keydown", (e) => {
+      const visible = !resultsEl.classList.contains("d-none");
+      if (e.key === "ArrowDown") {
+        if (!visible) openResults();
+        if (currentResults.length) {
+          activeIndex = (activeIndex + 1) % currentResults.length;
+          highlightActive();
+        }
+        e.preventDefault();
+      } else if (e.key === "ArrowUp") {
+        if (!visible) openResults();
+        if (currentResults.length) {
+          activeIndex = (activeIndex - 1 + currentResults.length) % currentResults.length;
+          highlightActive();
+        }
+        e.preventDefault();
+      } else if (e.key === "Enter") {
+        if (visible && activeIndex >= 0 && currentResults[activeIndex]) {
+          selectMovie(currentResults[activeIndex]);
+          e.preventDefault();
+        }
+      } else if (e.key === "Escape") {
+        closeResults();
+      }
+    });
+
+    function highlightActive() {
+      [...resultsEl.children].forEach((el, idx) => {
+        el.classList.toggle("active", idx === activeIndex);
+      });
+      const activeEl = resultsEl.children[activeIndex];
+      if (activeEl && activeEl.scrollIntoView) {
+        activeEl.scrollIntoView({ block: "nearest" });
+      }
+    }
+
+    // Click outside dropdown closes results
+    document.addEventListener("click", (e) => {
+      if (!resultsEl.contains(e.target) && e.target !== movieSearchInput) {
+        closeResults();
+      }
+    });
+
+    // Validation and submit
+    form.addEventListener("submit", function(event) {
+      let valid = true;
+
+      // Reset feedback
+      emailInput.classList.remove('is-invalid');
+      movieSearchInput.classList.remove('is-invalid');
+      movieError.style.display = "none";
+      movieAvailableError.style.display = "none";
+
+      // Email validation
+      if (!emailInput.value || !emailInput.checkValidity()) {
+          emailInput.classList.add('is-invalid');
+          valid = false;
+      }
+
+      // Movie selection validation
+      const pillVisible = selectedPillContainer.innerHTML.trim().length > 0;
+      if (!selectedMovieIdEl.value || !pillVisible) {
+          movieSearchInput.classList.add('is-invalid');
+          movieError.style.display = "block";
+          valid = false;
+      } else {
+          movieError.style.display = "none";
+          const selectedMovie = movies.find(m => String(m.film_id) === selectedMovieIdEl.value);
+          if (!selectedMovie || !selectedMovie.available) {
+              movieSearchInput.classList.add('is-invalid');
+              movieAvailableError.style.display = "block";
+              valid = false;
+          } else {
+              movieAvailableError.style.display = "none";
+          }
+      }
+
+      form.classList.add('was-validated');
+      if (!valid) {
+          event.preventDefault();
+          event.stopPropagation();
+      }
+    });
+
+    // Hide feedback on input
+    emailInput.addEventListener("input", () => {
+      emailInput.classList.remove('is-invalid');
+    });
+
+    // Restore selected movie if oldMovieId is provided from server
+  <% if (typeof oldMovieId !== 'undefined' && oldMovieId) { %>
+    const oldMovieId = "<%= oldMovieId %>";
+    const oldMovie = movies.find(m => String(m.film_id) === oldMovieId);
+    if (oldMovie) {
+      selectMovie(oldMovie);
+    }
+  <% } %>
+  </script>
+</section>

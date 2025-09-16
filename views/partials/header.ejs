@@ -1,0 +1,17 @@
+<header class="main-header header-color">
+  <div class="header-content">
+    <% if (user) { %>
+      <span class="user"><%= user.userFullName %></span>
+      <form action="/auth/logout" method="post" style="display:inline; margin-left:16px;">
+        <button type="submit" class="logout-btn" title="Uitloggen">
+          <i class="material-icons">logout</i>
+        </button>
+      </form>
+    <% } else { %>
+      <a href="/auth/login" class="btn-login">
+        <i class="material-icons" style="vertical-align: middle; font-size: 1.3rem; margin-right: 8px;">login</i>
+        Log in
+      </a>
+    <% } %>
+  </div>
+</header>

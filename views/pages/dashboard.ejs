@@ -1,0 +1,57 @@
+<section class="dashboard client-card">
+  <h2 class="mb-2">Welcome to MovieMate</h2>
+  <p class="text-muted mb-4">Your video rental overview at a glance </p>
+
+  <% if (user) { %>
+    <div class="stats-grid">
+      <div class="card">
+        <h3><%= data.active_rentals_count %></h3>
+        <p>Active Rentals</p>
+      </div>
+      <div class="card">
+        <h3><%= data.overdue_rentals_count %></h3>
+        <p>Overdue Rentals</p>
+      </div>
+      <div class="card">
+        <h3>€ <%= data.revenue_this_month %></h3>
+        <p>Revenue This Month</p>
+      </div>
+      <div class="card">
+        <h3><%= data.total_customers_count %></h3>
+        <p>Total Customers</p>
+      </div>
+    </div>
+  <% } %>
+
+  <div class="top-movies">
+    <h3 class="mt-5 mb-3">🎥 Top Rented Movies</h3>
+    <ul>
+      <% if (data.top_movies && data.top_movies.length > 0) { %>
+        <% data.top_movies.forEach(function(movie) { %>
+          <li>
+            <%= movie.title %> <span class="count"><%= movie.rental_count %> rentals</span>
+          </li>
+        <% }) %>
+      <% } else { %>
+        <li>No movies available</li>
+      <% } %>
+    </ul>
+  </div>
+
+  <div class="quick-actions d-flex mt-5 justify-content-center gap-4">
+    <button class="btn btn-primary">
+      <span class="material-icons me-2">groups</span>
+      Manage Clients
+    </button>
+    <button class="btn btn-primary">
+      <span class="material-icons me-2">movie</span>
+      Manage Movies
+    </button>
+    <button class="btn btn-primary">
+      <span class="material-icons me-2">assignment_returned</span>
+      Manage Rentals
+    </button>
+  </div>
+</section>
+
+<script src="/javascripts/dashboard.js"></script>
