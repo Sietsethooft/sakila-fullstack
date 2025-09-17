@@ -33,4 +33,5 @@ dist/
 build/
 
 # MySQL dumps of local database files
+database-script/
 *.sql

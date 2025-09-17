@@ -32,7 +32,7 @@ const authController = {
 
                 const userFullName = user.first_name + ' ' + user.last_name;
                 logger.debug(`userid: ${user.staff_id}, userFullName: ${userFullName}`);
-                const token = jwt.sign({ id: user.staff_id, userFullName: userFullName }, 'secretkey');
+                const token = jwt.sign({ id: user.staff_id, userFullName: userFullName }, process.env.SECRET_KEY);
                 res.cookie('token', token, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 }); // Set token in cookie for max 1 day
                 logger.info(`User logged in: ${username}`);
                 res.redirect('/dashboard');
