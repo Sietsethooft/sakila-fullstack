@@ -65,4 +65,29 @@ describe('Client Management', () => {
         cy.get('th').contains('Postal Code').parent().find('td').should('have.text', '5678XY');
     });
 
+    it('Can delete the user Testy McTestface', () => {
+        // Search for the user and open detail page
+        cy.get('input[name="search"]').clear().type('Testy McTestface');
+        cy.get('button.btn-search[type="submit"]').click();
+        cy.get('tr.client-row').contains('Testy McTestface').click();
+
+        // Click the delete button
+        cy.get('#delete-client-btn').click();
+
+        // Confirm the Swal2 popup
+        cy.get('.swal2-confirm').contains('Yes, delete').click();
+
+        // Check redirect and success message in the url
+        cy.url().should('include', '/clientManagement?success=3');
+
+        // Click OK in the Swal2 popup if it appears
+        cy.get('.swal2-confirm').click();
+
+        // Search again by name, check that there are no results
+        cy.get('input[name="search"]').clear().type('Testy McTestface');
+        cy.get('button.btn-search[type="submit"]').click();
+        cy.get('td.text-center').should('contain', 'No clients found.');
+    });
+
+
 });
