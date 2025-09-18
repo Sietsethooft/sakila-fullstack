@@ -22,28 +22,28 @@ describe('Client Management', () => {
         cy.get('#add-client-btn').scrollIntoView().click({ force: true });
         cy.url().should('include', '/clientManagement/create');
 
-        cy.get('input[name="first_name"]').type('Testy');
-        cy.get('input[name="last_name"]').type('McTestface');
-        cy.get('input[name="email"]').type('testy.mctestface@example.com');
-        cy.get('input[name="address"]').type('Teststraat 1');
-        cy.get('input[name="city"]').type('Teststad');
-        cy.get('input[name="district"]').type('Testdistrict');
-        cy.get('input[name="country"]').type('Testland');
-        cy.get('input[name="postal_code"]').type('1234AB');
-        cy.get('input[name="phone"]').type('0612345678');
+        cy.get('input[name="first_name"]').type('Liam');
+        cy.get('input[name="last_name"]').type('Anderson');
+        cy.get('input[name="email"]').type('Liam.Anderson@example.com');
+        cy.get('input[name="address"]').type('123 Main Street');
+        cy.get('input[name="city"]').type('Springfield');
+        cy.get('input[name="district"]').type('Downtown');
+        cy.get('input[name="country"]').type('United States');
+        cy.get('input[name="postal_code"]').type('90210');
+        cy.get('input[name="phone"]').type('5551234567');
 
         cy.get('button[type="submit"]').contains('Save').click();
 
         // Check if you are redirected to the client detail page with success message
         cy.url().should('match', /\/clientManagement\/\d+\?success=1/);
-        cy.contains('Testy McTestface');
+        cy.contains('Liam Anderson');
     });
 
-    it('Can update the postal code of Testy McTestface', () => {
+    it('Can update the postal code of Liam Anderson', () => {
         // Search for the user
-        cy.get('input[name="search"]').clear().type('Testy McTestface');
+        cy.get('input[name="search"]').clear().type('Liam Anderson');
         cy.get('button.btn-search[type="submit"]').click();
-        cy.get('tr.client-row').contains('Testy McTestface').click();
+        cy.get('tr.client-row').contains('Liam Anderson').click();
 
         // Click the Edit button
         cy.url().should('match', /\/clientManagement\/\d+/);
@@ -65,18 +65,18 @@ describe('Client Management', () => {
         cy.get('th').contains('Postal Code').parent().find('td').should('have.text', '5678XY');
     });
 
-    it('Can create a rental for Testy McTestface and sees it in the table', () => {
-        // Search and open detail page of Testy McTestface
-        cy.get('input[name="search"]').clear().type('Testy McTestface');
+    it('Can create a rental for Liam Anderson and sees it in the table', () => {
+        // Search and open detail page of Liam Anderson
+        cy.get('input[name="search"]').clear().type('Liam Anderson');
         cy.get('button.btn-search[type="submit"]').click();
-        cy.get('tr.client-row').contains('Testy McTestface').click();
+        cy.get('tr.client-row').contains('Liam Anderson').click();
 
         // Click the "New Rental" button
         cy.get('a').contains('New Rental').click();
 
         // Check that you are on the rental create page and the email field is filled
         cy.url().should('include', '/rentalManagement/create');
-        cy.get('input[name="customerEmail"]').should('have.value', 'testy.mctestface@example.com');
+        cy.get('input[name="customerEmail"]').should('have.value', 'Liam.Anderson@example.com');
 
         // Type "academy dinosaur" and select it from the dropdown
         cy.get('#movieSearch').type('academy dinosaur');
@@ -95,11 +95,11 @@ describe('Client Management', () => {
         cy.get('table').contains('td', 'ACADEMY DINOSAUR').should('exist');
     });
 
-    it('Shows error popup when trying to delete Testy McTestface with outstanding rentals', () => {
+    it('Shows error popup when trying to delete Liam Anderson with outstanding rentals', () => {
         // Search for the user and open detail page
-        cy.get('input[name="search"]').clear().type('Testy McTestface');
+        cy.get('input[name="search"]').clear().type('Liam Anderson');
         cy.get('button.btn-search[type="submit"]').click();
-        cy.get('tr.client-row').contains('Testy McTestface').click();
+        cy.get('tr.client-row').contains('Liam Anderson').click();
 
         // Click the delete button
         cy.get('#delete-client-btn').click();
@@ -113,11 +113,11 @@ describe('Client Management', () => {
         cy.get('.swal2-html-container').should('contain', 'There are still outstanding rentals.');
     });
 
-    it('Can return a rental for Testy McTestface and sees no outstanding rentals left', () => {
-        // Search and open detail page of Testy McTestface
-        cy.get('input[name="search"]').clear().type('Testy McTestface');
+    it('Can return a rental for Liam Anderson and sees no outstanding rentals left', () => {
+        // Search and open detail page of Liam Anderson
+        cy.get('input[name="search"]').clear().type('Liam Anderson');
         cy.get('button.btn-search[type="submit"]').click();
-        cy.get('tr.client-row').contains('Testy McTestface').click();
+        cy.get('tr.client-row').contains('Liam Anderson').click();
 
         // Find the correct rental and click the return button (✓)
         cy.get('table').contains('td', 'ACADEMY DINOSAUR').parent().within(() => {
@@ -137,11 +137,11 @@ describe('Client Management', () => {
         cy.get('table').contains('td.text-center', 'No outstanding rentals found.').should('exist');
     });
 
-    it('Can delete the user Testy McTestface', () => {
+    it('Can delete the user Liam Anderson', () => {
         // Search for the user and open detail page
-        cy.get('input[name="search"]').clear().type('Testy McTestface');
+        cy.get('input[name="search"]').clear().type('Liam Anderson');
         cy.get('button.btn-search[type="submit"]').click();
-        cy.get('tr.client-row').contains('Testy McTestface').click();
+        cy.get('tr.client-row').contains('Liam Anderson').click();
 
         // Click the delete button
         cy.get('#delete-client-btn').click();
@@ -156,7 +156,7 @@ describe('Client Management', () => {
         cy.get('.swal2-confirm').click();
 
         // Search again by name, check that there are no results
-        cy.get('input[name="search"]').clear().type('Testy McTestface');
+        cy.get('input[name="search"]').clear().type('Liam Anderson');
         cy.get('button.btn-search[type="submit"]').click();
         cy.get('td.text-center').should('contain', 'No clients found.');
     });
