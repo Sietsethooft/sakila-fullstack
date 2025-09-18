@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Success add rental alert
-    if (window.rentalSuccess == 5) {
+    if (window.clientSuccess == 5) {
         Swal.fire({
             title: 'Rental added successfully!',
             icon: 'success',
