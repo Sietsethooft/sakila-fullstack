@@ -39,6 +39,13 @@ jobs:
     needs: build
     permissions:
       contents: read
+    env:
+      DB_HOST: ${{ secrets.DB_HOST }}
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      DB_DATABASE: ${{ secrets.DB_DATABASE }}
+      DB_PORT: ${{ secrets.DB_PORT }}
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
 
     steps:
       - name: Download artifact from build job
@@ -56,10 +63,6 @@ jobs:
 
       - name: npm install
         run: npm install
-
-      - name: Insert seed data in database
-        run: |
-          mysql -h ${{ secrets.DB_HOST }} -u ${{ secrets.DB_USER }} -p${{ secrets.DB_PASSWORD }} ${{ secrets.DB_DATABASE }} < database-script/INSERT.sql
 
       - name: Run Cypress tests
         run: npm run cypress:run
