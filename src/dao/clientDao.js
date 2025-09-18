@@ -3,7 +3,7 @@ const logger = require('../utils/logger');
 
 const clientDao = {
 
-    getAllClients(req, res){
+    getClients(req, res){
         const search = req.query.search || '';
         const success = req.query.success || null;
         logger.debug(`[TEST-LOG] getAllClients called with search: "${search}"`);
