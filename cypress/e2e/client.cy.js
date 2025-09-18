@@ -65,6 +65,28 @@ describe('Client Management', () => {
         cy.get('th').contains('Postal Code').parent().find('td').should('have.text', '5678XY');
     });
 
+    it('Shows validation error when updating Liam Anderson with invalid phone number', () => {
+        // Search for the user and open detail page
+        cy.get('input[name="search"]').clear().type('Liam Anderson');
+        cy.get('button.btn-search[type="submit"]').click();
+        cy.get('tr.client-row').contains('Liam Anderson').click();
+
+        // Click the Edit button
+        cy.url().should('match', /\/clientManagement\/\d+/);
+        cy.get('a.btn-warning').contains('Edit').click();
+
+        // Change the phone number to an invalid value
+        cy.url().should('match', /\/clientManagement\/\d+\/edit/);
+        cy.get('input[name="phone"]').clear().type('583945');
+        cy.get('button[type="submit"]').contains('Save').click();
+
+        // Check that the validation error appears at the top of the page
+        cy.get('li').should('contain', 'Please enter a valid phone number (10 digits, optional country code).');
+
+        // Ensure the URL has not changed (still on the edit page)
+        cy.url().should('match', /\/clientManagement\/\d+\/update/);
+    });
+
     it('Can create a rental for Liam Anderson and sees it in the table', () => {
         // Search and open detail page of Liam Anderson
         cy.get('input[name="search"]').clear().type('Liam Anderson');
