@@ -8,6 +8,7 @@ const clientController = {
     getAllClients(req, res){
         const search = req.query.search || '';
         const success = req.query.success || null;
+        logger.debug(`[TEST-LOG] getAllClients called with search: "${search}"`);
         clientServices.getClients(search, (error, clients) => {
             if (error) {
                 logger.error(`Error retrieving client details: Error: ${error.message}`);
