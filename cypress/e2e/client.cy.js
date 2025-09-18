@@ -65,6 +65,38 @@ describe('Client Management', () => {
         cy.get('th').contains('Postal Code').parent().find('td').should('have.text', '5678XY');
     });
 
+    it('Can create a rental for Testy McTestface and sees it in the table', () => {
+        // Search and open detail page of Testy McTestface
+        cy.get('input[name="search"]').clear().type('Testy McTestface');
+        cy.get('button.btn-search[type="submit"]').click();
+        cy.get('tr.client-row').contains('Testy McTestface').click();
+
+        // Click the "New Rental" button
+        cy.get('a').contains('New Rental').click();
+
+        // Check that you are on the rental create page and the email field is filled
+        cy.url().should('include', '/rentalManagement/create');
+        cy.get('input[name="customerEmail"]').should('have.value', 'testy.mctestface@example.com');
+
+        // Type "academy dinosaur" and select it from the dropdown
+        cy.get('#movieSearch').type('academy dinosaur');
+        cy.get('#results').contains(/academy dinosaur/i).click();
+
+        // Click submit
+        cy.get('button[type="submit"]').contains('Submit Rental').click();
+
+        // Check redirect to client detail with success=5
+        cy.url().should('match', /\/clientManagement\/\d+\?success=5/);
+
+        // Click OK in the Swal2 popup
+        cy.get('.swal2-confirm').click();
+
+        // Check if the table contains a row with "ACADEMY DINOSAUR"
+        cy.get('table').contains('td', 'ACADEMY DINOSAUR').should('exist');
+    });
+
+
+
     it('Can delete the user Testy McTestface', () => {
         // Search for the user and open detail page
         cy.get('input[name="search"]').clear().type('Testy McTestface');
@@ -88,6 +120,5 @@ describe('Client Management', () => {
         cy.get('button.btn-search[type="submit"]').click();
         cy.get('td.text-center').should('contain', 'No clients found.');
     });
-
 
 });
