@@ -11,7 +11,7 @@
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2><%= data.client.name %></h2>
         <div class="mb-1">
-            <a href="/rentalManagement/create?email=<%= encodeURIComponent(data.client.email) %>" class="btn btn-primary-sm me-2">
+            <a href="/rentalManagement/create?email=<%= encodeURIComponent(data.client.email) %>&clientId=<%= data.client.customer_id %>" class="btn btn-primary-sm me-2">
                 <i class="fas fa-plus"></i> New Rental
             </a>
             <a href="/clientManagement/<%= data.client.customer_id %>/edit" class="btn btn-warning me-2">

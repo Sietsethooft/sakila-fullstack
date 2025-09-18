@@ -51,6 +51,8 @@ const rentalController = {
     },
     getCreateRentalForm(req, res) {
         const givenEmail = req.query.email || '';
+        const clientId = req.query.clientId || null;
+               logger.debug(`clientid getCreateRentalForm: ${clientId}`);
         movieServices.getMovieAvailabilities((err, movies) => {
             if (err) {
                 logger.error(`Error retrieving movies for rental creation: ${err.message}`);
@@ -61,7 +63,8 @@ const rentalController = {
             }
             res.render('pages/rentalManagement/rentalCreate', {
                 movies: movies,
-                email: givenEmail
+                email: givenEmail,
+                clientId: clientId
             });
         });
     },
@@ -69,6 +72,9 @@ const rentalController = {
         const { customerEmail, movieId } = req.body;
         logger.debug(req.body);
         const staff_id = res.locals.user ? res.locals.user.id : undefined;
+        const clientId = req.body.clientId || null; // Get clientId from hidden input, if available
+
+        logger.debug(`clientid createRental: ${clientId}`);
 
         clientService.getClientIdByEmail(customerEmail, (err, customer_id) => {
             if (err) {
@@ -118,6 +124,11 @@ const rentalController = {
                             message: 'Error creating rental',
                             error: { status: 500, stack: err.stack }
                         });
+                    }
+
+                    if (clientId) {
+                        // Redirect back to the client's detail page if clientId is available
+                        return res.redirect(`/clientManagement/${clientId}?success=5`);
                     }
                     res.redirect('/rentalManagement?success=1');
                 });

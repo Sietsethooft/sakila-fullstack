@@ -64,9 +64,7 @@ app.use(expressLayouts);
 app.set('layout', 'layouts/main');
 
 // Routes
-app.get('/', (req, res) => {
-  res.render('pages/dashboard');
-});
+app.use('/', dashboardRouter);
 
 app.use('/auth', authRouter);
 app.use('/dashboard', dashboardRouter);
