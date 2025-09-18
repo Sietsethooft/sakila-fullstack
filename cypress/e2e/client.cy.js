@@ -95,7 +95,23 @@ describe('Client Management', () => {
         cy.get('table').contains('td', 'ACADEMY DINOSAUR').should('exist');
     });
 
+    it('Shows error popup when trying to delete Testy McTestface with outstanding rentals', () => {
+        // Search for the user and open detail page
+        cy.get('input[name="search"]').clear().type('Testy McTestface');
+        cy.get('button.btn-search[type="submit"]').click();
+        cy.get('tr.client-row').contains('Testy McTestface').click();
 
+        // Click the delete button
+        cy.get('#delete-client-btn').click();
+
+        // Confirm the Swal2 popup
+        cy.get('.swal2-confirm').contains('Yes, delete').click();
+
+        // Check that the error popup appears with correct title and message
+        cy.get('.swal2-popup.swal2-modal.swal2-icon-error').should('be.visible');
+        cy.get('.swal2-title').should('contain', 'Client cannot be deleted');
+        cy.get('.swal2-html-container').should('contain', 'There are still outstanding rentals.');
+    });
 
     it('Can delete the user Testy McTestface', () => {
         // Search for the user and open detail page
