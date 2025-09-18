@@ -10,7 +10,7 @@ const clientDao = {
         `;
         let params = [];
         if (search && search.trim() !== '') {
-            query += ' WHERE CONCAT(first_name, " ", last_name) LIKE ?';
+            query += " WHERE CONCAT(first_name, ' ', last_name) LIKE ?";
             params.push(`%${search.trim()}%`);
         }
 
