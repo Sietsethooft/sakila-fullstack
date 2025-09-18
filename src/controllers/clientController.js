@@ -10,7 +10,7 @@ const clientController = {
         const success = req.query.success || null;
         clientServices.getClients(search, (error, clients) => {
             if (error) {
-                logger.error(`Error retrieving client details: ID ${customer_id}, Error: ${error.message}`);
+                logger.error(`Error retrieving client details: Error: ${error.message}`);
                 res.status(500).render('pages/error', {
                     message: 'Error retrieving clients',
                     error: { status: 500, stack: error.stack }
