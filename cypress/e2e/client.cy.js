@@ -36,6 +36,9 @@ describe('Client Management', () => {
 
         // Check if you are redirected to the client detail page with success message
         cy.url().should('match', /\/clientManagement\/\d+\?success=1/);
+
+        // Check alert
+        cy.get('.swal2-title').should('have.text', 'Client added successfully!');
         cy.contains('Liam Anderson');
     });
 
@@ -57,6 +60,9 @@ describe('Client Management', () => {
         // Check redirect and success message
         cy.url().should('match', /\/clientManagement\/\d+\?success=2/);
         cy.contains('Client updated successfully!');
+
+        // Check alert
+        cy.get('.swal2-title').should('have.text', 'Client updated successfully!');
 
         // Click OK in the Swal2 popup if it appears
         cy.get('.swal2-confirm').click();
@@ -110,6 +116,9 @@ describe('Client Management', () => {
         // Check redirect to client detail with success=5
         cy.url().should('match', /\/clientManagement\/\d+\?success=5/);
 
+        // Check alert
+        cy.get('.swal2-title').should('have.text', 'Rental added successfully!');
+
         // Click OK in the Swal2 popup
         cy.get('.swal2-confirm').click();
 
@@ -152,6 +161,9 @@ describe('Client Management', () => {
         // Check redirect to client detail with success=4
         cy.url().should('match', /\/clientManagement\/\d+\?success=4/);
 
+        // Check alert
+        cy.get('.swal2-title').should('have.text', 'Rental closed successfully!');
+
         // Click OK in the Swal2 popup
         cy.get('.swal2-confirm').click();
 
@@ -173,6 +185,9 @@ describe('Client Management', () => {
 
         // Check redirect and success message in the url
         cy.url().should('include', '/clientManagement?success=3');
+
+        // Check alert
+        cy.get('.swal2-title').should('have.text', 'Client deleted successfully!');
 
         // Click OK in the Swal2 popup if it appears
         cy.get('.swal2-confirm').click();
