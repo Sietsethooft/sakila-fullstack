@@ -18,6 +18,26 @@ describe('Client Management', () => {
         });
     });
 
+    it('Can add a new client', () => {
+        cy.get('#add-client-btn').scrollIntoView().click({ force: true });
+        cy.url().should('include', '/clientManagement/create');
+
+        cy.get('input[name="first_name"]').type('Testy');
+        cy.get('input[name="last_name"]').type('McTestface');
+        cy.get('input[name="email"]').type('testy.mctestface@example.com');
+        cy.get('input[name="address"]').type('Teststraat 1');
+        cy.get('input[name="city"]').type('Teststad');
+        cy.get('input[name="district"]').type('Testdistrict');
+        cy.get('input[name="country"]').type('Testland');
+        cy.get('input[name="postal_code"]').type('1234AB');
+        cy.get('input[name="phone"]').type('0612345678');
+
+        cy.get('button[type="submit"]').contains('Save').click();
+
+        // Check if you are redirected to the client detail page with success message
+        cy.url().should('match', /\/clientManagement\/\d+\?success=1/);
+        cy.contains('Testy McTestface');
+    });
 
     
 });
