@@ -113,6 +113,30 @@ describe('Client Management', () => {
         cy.get('.swal2-html-container').should('contain', 'There are still outstanding rentals.');
     });
 
+    it('Can return a rental for Testy McTestface and sees no outstanding rentals left', () => {
+        // Search and open detail page of Testy McTestface
+        cy.get('input[name="search"]').clear().type('Testy McTestface');
+        cy.get('button.btn-search[type="submit"]').click();
+        cy.get('tr.client-row').contains('Testy McTestface').click();
+
+        // Find the correct rental and click the return button (✓)
+        cy.get('table').contains('td', 'ACADEMY DINOSAUR').parent().within(() => {
+            cy.get('button.return-rental').click();
+        });
+
+        // Confirm the Swal2 popup
+        cy.get('.swal2-confirm').contains('Yes, close').click();
+
+        // Check redirect to client detail with success=4
+        cy.url().should('match', /\/clientManagement\/\d+\?success=4/);
+
+        // Click OK in the Swal2 popup
+        cy.get('.swal2-confirm').click();
+
+        // Check if the table contains "No outstanding rentals found."
+        cy.get('table').contains('td.text-center', 'No outstanding rentals found.').should('exist');
+    });
+
     it('Can delete the user Testy McTestface', () => {
         // Search for the user and open detail page
         cy.get('input[name="search"]').clear().type('Testy McTestface');
