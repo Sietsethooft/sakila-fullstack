@@ -51,6 +51,10 @@
       <div class="mt-4 d-flex justify-content-end">
         <button type="submit" class="btn btn-primary">Submit Rental</button>
       </div>
+       <!-- Preserve clientId if provided -->
+        <% if (typeof clientId !== 'undefined' && clientId) { %>
+          <input type="hidden" name="clientId" value="<%= clientId %>">
+        <% } %>
     </form>
   </div>
 
@@ -65,7 +69,7 @@
     <% }) %>
   </ul>
 
-  
+
   <script>
     // Parse movie data from hidden DOM element
     function getMoviesFromDOM() {

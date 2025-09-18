@@ -43,4 +43,13 @@ document.addEventListener('DOMContentLoaded', function() {
             confirmButtonText: 'OK'
         });
     }
+
+    // Success add rental alert
+    if (window.rentalSuccess == 5) {
+        Swal.fire({
+            title: 'Rental added successfully!',
+            icon: 'success',
+            confirmButtonText: 'OK'
+        });
+    }
 });
