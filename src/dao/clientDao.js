@@ -1,4 +1,5 @@
 const db = require('../models/db');
+const logger = require('../utils/logger');
 
 const clientDao = {
 
@@ -12,6 +13,8 @@ const clientDao = {
             query += ' WHERE CONCAT(first_name, " ", last_name) LIKE ?';
             params.push(`%${search.trim()}%`);
         }
+
+        logger.debug(`[TEST-LOG] getClients called with query: "${query}" and params: ${JSON.stringify(params)}`);
         db.query(query, params, callback);
     },
 
