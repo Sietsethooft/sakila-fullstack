@@ -1,18 +1,15 @@
 const db = require('../models/db');
+const logger = require('../utils/logger');
 
 const clientDao = {
 
-    getClients(search, callback) {
-        let query = `
-            SELECT customer_id, first_name, last_name, email, active, last_update
-            FROM customer
-        `;
-        let params = [];
-        if (search) {
-            query += ' WHERE CONCAT(first_name, " ", last_name) LIKE ?';
-            params.push(`%${search}%`);
-        }
-        db.query(query, params, callback);
+    getAllClients(req, res){
+        const search = req.query.search || '';
+        const success = req.query.success || null;
+        logger.debug(`[TEST-LOG] getAllClients called with search: "${search}"`);
+        clientServices.getClients(search, (error, clients) => {
+            // ...existing code...
+        });
     },
 
     getClientDetails(customer_id, callback) {

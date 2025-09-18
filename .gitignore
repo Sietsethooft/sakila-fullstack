@@ -31,3 +31,7 @@ Thumbs.db
 # Build output
 dist/
 build/
+
+# SQL files
+database-script/
+*.sql
