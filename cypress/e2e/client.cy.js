@@ -39,5 +39,30 @@ describe('Client Management', () => {
         cy.contains('Testy McTestface');
     });
 
-    
+    it('Can update the postal code of Testy McTestface', () => {
+        // Search for the user
+        cy.get('input[name="search"]').clear().type('Testy McTestface');
+        cy.get('button.btn-search[type="submit"]').click();
+        cy.get('tr.client-row').contains('Testy McTestface').click();
+
+        // Click the Edit button
+        cy.url().should('match', /\/clientManagement\/\d+/);
+        cy.get('a.btn-warning').contains('Edit').click();
+
+        // Change the postal code
+        cy.url().should('match', /\/clientManagement\/\d+\/edit/);
+        cy.get('input[name="postal_code"]').clear().type('5678XY');
+        cy.get('button[type="submit"]').contains('Save').click();
+
+        // Check redirect and success message
+        cy.url().should('match', /\/clientManagement\/\d+\?success=2/);
+        cy.contains('Client updated successfully!');
+
+        // Click OK in the Swal2 popup if it appears
+        cy.get('.swal2-confirm').click();
+
+        // Check if the postal code is updated in the table
+        cy.get('th').contains('Postal Code').parent().find('td').should('have.text', '5678XY');
+    });
+
 });
